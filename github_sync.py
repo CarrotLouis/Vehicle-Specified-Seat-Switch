@@ -19,7 +19,7 @@ def main():
     if login.lower()!=OWNER.lower():raise RuntimeError('Signed-in account differs from the authorized owner: '+login)
     repo=json.loads(cli('api','repos/'+OWNER+'/'+REPO,'--jq','{url:.html_url,private:.private,default_branch:.default_branch}'))
     print(json.dumps({'account':login,**repo},ensure_ascii=False))
-    if '--push'not in sys.argv:return
+    if '--push'not in sys.argv and '--fetch'not in sys.argv:return
     def git(*args,run_env=env):
         return subprocess.run(['git','-c','safe.directory='+str(ROOT),'-C',str(ROOT),*args],env=run_env,
                               capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=180)
@@ -32,9 +32,16 @@ def main():
     token=cli('auth','token')
     if not token:raise RuntimeError('GitHub authentication unavailable.')
     header='Authorization: Basic '+base64.b64encode(('x-access-token:'+token).encode()).decode()
-    push_env=env.copy();push_env.update(GIT_TERMINAL_PROMPT='0',GIT_TRACE='0',GIT_CURL_VERBOSE='0',GIT_CONFIG_COUNT='3',
+    push_env=env.copy()
+    for key in list(push_env):
+        if key.startswith('GIT_TRACE')or key=='GIT_CURL_VERBOSE':push_env.pop(key,None)
+    push_env.update(GIT_TERMINAL_PROMPT='0',GIT_CONFIG_COUNT='3',
         GIT_CONFIG_KEY_0='http.https://github.com/.extraheader',GIT_CONFIG_VALUE_0=header,
         GIT_CONFIG_KEY_1='credential.helper',GIT_CONFIG_VALUE_1='',GIT_CONFIG_KEY_2='http.sslVerify',GIT_CONFIG_VALUE_2='true')
+    if '--fetch'in sys.argv:
+        result=git('fetch','origin','main',run_env=push_env)
+        if result.returncode:raise RuntimeError((result.stderr or result.stdout).replace(token,'[redacted]').replace(header,'[redacted]').strip())
+        print('Fetched origin/main');return
     result=git('push','--set-upstream','origin','main',run_env=push_env)
     if result.returncode:
         message=(result.stderr or result.stdout).replace(token,'[redacted]').replace(header,'[redacted]')

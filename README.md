@@ -6,8 +6,6 @@ English | [简体中文](README.zh-CN.md)
 
 Helldivers 2 addon for switching directly to specified vacant vehicle seats while staying aboard. Supports M-102, M-103 and M-104 FRVs, TD-220 Bastion MK XVI, TD-110 Maelstrom and the mission tanker. Enhanced cross-group switching works for the installing player with unmodded teammates, as host or guest.
 
-本仓库以原工作目录 `work` 为根目录，保存源码、离线测试和研究说明。安装 ZIP 由作者自行发布到 Releases；输出包、游戏原始文件、采集日志、工具与依赖缓存不提交。
-
 Active source: [`seat_release_041`](seat_release_041). It adds in-game Normal/Enhanced selection, independent INI/native-menu key strategies, a resident Enhanced controller with Lua-only Normal restrictions and 13 language tables. First-use defaults are Normal and INI. The menus require [ModOptionsMenu](https://github.com/CowboyBingus/ModOptionsMenu) and [ModBindingsMenu](https://github.com/CowboyBingus/ModBindingsMenu), with [Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader).
 
 INI keys remain at `%APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini`. Menu actions use the native bindings UI and start unbound under its public API. Neither source overwrites the other.

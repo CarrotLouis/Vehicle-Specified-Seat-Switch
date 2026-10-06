@@ -1,0 +1,37 @@
+# 2026-10-04 — paired 0.25.0 failed driver telemetry; 0.25.1 FIX READY; STOP for ONE coast sample
+
+Latest user supplied three friend logs from E:/下载/QQ Download and reports TWO held-W triggers (first suspected collision), third coast; all stopped. Installer guest, friend host. Final Enhanced remains installer-only host/guest/unmodded teammates, stay aboard/exclusivity/instant/low overhead. No DS/subagents/goal/game launch/live install or INI modifications. Stop now for minimum new driver data, not another full test round.
+
+## Frozen evidence and failure
+
+`work/seat_motion_research/capture-20261004-0250-paired/` has friend/installer raw files, files.json and analysis.json. `analyze_pair_0250.py` reuses immutable frozen files, verifies hashes; on-foot seat.current=0 is NOT a driver sample (requires nonzero collection, matching M102/26/5-seat and nontransitioning). 43 actual stable driver state rows t317016–371516.
+
+- Friend VehicleSeatDriverObserver-20261004-215606-8568-209812546.log 244370B SHA7b624d6cbf933b6ad7bef91c5f26dfae66dd082a87036ef200de856443258b2d. 332 rows/start1/state326/read_gap3/driver_watch_gap1/end1; version0250. t317016 first driving read fails `mods/vehicle_seat_tools/driver_motion_observer.lua:818: attempt to index upvalue 'ffi' (a nil value)`. NO driver_watch_started/physics/native hooks/events; physical data unusable. State/startup/Loader useful only. Startup three transient invalid_pointer gaps distinct from fatal FFI bug. Never interpret missing data as zero speed.
+- Friend status187B SHA4fc0266ccb030ccf04628adb39ddde8370abde74131ac5b9dbb28d6c62d8077e. Loader1013B SHA8777d3381b0d0bf444a3bb92cec59e52c8ec9cc6d7e41768e93e37638633547c. Loader metadata17/productlog18 labels distinct, no incompatibility inferred; transmog/foundation addons also loaded.
+- Installer local VehicleSeatIntegrated-20261004-215650-42712-340550968.log 1133005B SHA4a72e9e6541b6cc71f17f1b4253ce0f301aaa42f51a56690aec55242845fff84, version0240. 1132rows/3 complete loans/69physics/236native(230velocity6pose)/0gaps/drops/restoreflags0. Checked112/relocated0.
+- Request times271453/284657/300500. Native before/first-return speeds19.27044/.06998,17.36779/.07880,15.29525/.17369. Fresh driver replicated speeds1.041883/.762500/.033560. TWO7143d7 world poses per loan,73/79/78vel calls. Op1heldW suspectedcollision EXCLUDED from causal proof, op2heldW clean, op3coast clean. Installer-only physical observations do NOT establish driver-process clear phase.
+- Installer status1340B SHAe3aed034a7055a56e251fb4be0e53583c62b1d697e39d03d93a735cc7e6f9f35; Loader1089B SHAb0067481788f79930ec2a7c1d2172b12e497e702a1203b36dd664d816a81da66.
+
+## Confirmed diagnostic integration bug / repair
+
+OLD readonly platform from `seat_network_diagnostic/platform.lua` closes over FFI but exports no api.ffi. Physical reader expects api.ffi. Unit fixtures mocked it, hiding actual deployment contract. Our bug, not user testing. Separate `work/seat_driver_observer_fix` derivative: ONLY readonly adapter exports existing `ffi=ffi`, entry asserts api.ffi/new/copy/cast before readiness. Version0251. Existing physical/property/flags readers, context/watch/pose/helper semantics and native DLL unchanged. No seat/ownership request/input/network pipeline/INI/physics writer. Original0250 source and ZIP preserved.
+
+`prepare_bundle_replay.py` creates exact final bundle prefix exports + actual physical-reader saved-code fixture with41 dynamic actors. Test backend mocks native getter outputs/properties/context/hook installation explicitly. Actual readonly adapter supplies FFI; fixture must NOT invent it. `test_bundle_driver.lua`: full entry/driver loan+return+leave actual watcher/reader/recorder, emits driver samples and owner transitions, preserves original update/shutdown tuples, zero writes, out-of-scope zero getter calls. `test_previous_bundle_failure.lua`: exact OLD0250components+actual adapter reproduces missingFFI before any native getters/hooks, negative control. Separate processes for both saved captures25327279/25480438 avoid duplicate FFI typedefs. New unit entry negative missing-adapter dependency refuses startup. All PASS.
+
+## Final package and verification
+
+`outputs/Vehicle-Seat-Driver-Observer-0.25.1.zip` **724286B**, SHA **d48066f2c973f95d425f1ed3e1b351cff308bec5ca456a3bf2cdb666a727a285**, GUIDa3d2bf30-46bc-48d4-8177-18dc9c250001. Same resource/global as0250: mods/vehicle_seat_tools/driver_motion_observer / VehicleSeatDriverObserver => REPLACE0250, neverboth. ONE Diagnostic option/bilingual. External说明.txt and outputs/Vehicle-Seat-0.25.0采集结论与0.25.1修正说明.md.
+
+build-0251.log PASS four suites/context23boundedreads/112contracts bothcaptures/32physical+31handoff each/6flag+7malformed/exact bundle syntax/new integrated deployment+old failure reproduction eachsavedbuild. No live proof. Watch retains TWO/M102/localdriver scope,20Hz120sec,2sec exactactor armrenew1.5sec, no allmemoryscan/out-of-scope physical reads. Helper14981B SHA72f9102952776c995cbd82f9fe9524a45271658a17f11bd32856f403b5611aec unchanged; readonly observer twoRW data slots original forwarding, no executable modifications/physicswrites.
+
+Post-build `work/verify_driver_fix_artifact.py` checks ALL archived experiment files exact reviewed inputs, exact archived Lua resource, actual platform onlyFFI-exportdiff, prefix replay matches ZIP, startup guard, source/docs/CRC/helper/origins/tenoldZIPs unchanged. Outside shipped R avoids mutating an archived verifier/source. Initial prefix equality failed on Windows CRLF standalone vs LF runtime; fixed verifier newline normalization only, every archived file still byte-compared to input. Runtime/ZIP unchanged. `artifact-verification.json` PASS.
+
+FINAL actual isolated Arsenal fixture `work/packaging_research/manager-fixture-3640f0fb-9a90-4b41-95c3-0765816b5f0f/result.json`: same FINAL SHA,3payloads/bilingual/purge/hash PASS, live_profile_changedfalse/game_launchedfalse. Fixture `test_driver_fix_package.cjs`, original0250fixture remains unchanged.
+
+UNCHANGED installer0240 ZIP1026291B SHA9a5fbada3a23a9ffd359eb9e9508e7fd1c5486d1b6576631164d312995ad679f, old0250 ZIP478252B SHAc1044204eb1318b97b9ef40f1f3d63103bf4b9fcd4a92cb94aaf0248285754ff, production024 and8otherolderZIPs preserved.
+
+## STOP / next live action
+
+Fullquit both. Only currentLoader+own role package, disableothermods. FRIEND hosts+PASSIVE0251 ONLY; installerGUEST+UNCHANGEDLOAN0240ONLY, nottwoonsamePC. TWO/M102 frienddriver/installersidefront/gunnerempty,ship30s. Within2min driverentry, ONE COAST30–50 onflatstraight: friendreleaseW→immediateexistinginstaller gunnerkeyonepress; friendnoWASD/brake>=3sec. INI unchanged defaultF5/currentCtrlMouse2, friendautomatic no key. No actualseatchange expected (loan-only), stop remains unresolved. If120sexpired leave/reenterdriverwindow. No repeatedHELDW/HOSTroles/tanks/3+ tests. Actualswitch/driveloss/crashSTOP.
+
+Need FRIEND full timestampedVehicleSeatDriverObserver + status + BingusSharedLoader logs. Local installerVehicleSeatIntegrated readhere. Firstfreeze/hash then REQUIRE driver_watch_started/driver_physics_sample/pose_call_ready/native_motion_api_call; pair realpeerhex/serial/vehicle notindependentt clocks. Locate actual driver loss/gain velocity/native pose and body flags before any fix. APIentry≠deferredcompletion. Final installer-only requirement unchanged. Movingstop/tankspin/live3-4/fullEnhanced UNRESOLVED. No currently running exec/agent tasks; historical environment agent identifiers not used.

@@ -1,0 +1,42 @@
+# 2026-10-02 — 0.18.2 analyzed; 0.18.3 combined tank repair ready
+
+STOP for NEW live0.18.3 data. Do not repeat0.18.2, and do not claim the new visual/physics repairs passed. User wants larger combined tests/fewer packages, friend unmodded, installer host OR guest, stays inside, vacant/unreserved seats, original INI. User now explicitly authorizes trying the formerly deferred tank held-A/D spin. No DS/subagent tasks. No live game/Arsenal/INI changes.
+
+## Accepted latest evidence
+
+Frozen files and analysis: work/seat_tank_binding_fix/capture-20261002-0182/files.json and analysis.json.
+HOST VehicleSeatIntegrated-20261002-163416-4988-148396796.log:1053872B SHA02b556eb3ffc3b30b85c6d5dd65d3084bba13c7912ddb1497cea8f2578f0b978.7Bastion+7Maelstrom=14 completions.
+GUEST VehicleSeatIntegrated-20261002-164406-31476-148987750.log:1189117B SHA336e8f657cd1698ab4718f8fa530dfb6bbb57c0d4f09ba4eed2bcbf76194791b.11Bastion+9Maelstrom=20 completions.
+Both clean shutdown, read/animation gaps0, dropped0. Previous tank weapon-channel replication executed; host input-only abort recovered once and next physical press completed. User: host no anomaly; guest Bastion passenger body remains forward despite working weapon and different shot direction in BOTH views. Maelstrom fine; no other issue reported. Maelstrom both roles accepted; Bastion guest pose not accepted.
+
+Animation overlay8:HOSTBastion0x297samples/HOSTMaelstrom0x273/GUESTMaelstrom0x383; GUESTBastion237(Fall)x337 and238(Fall_Aim)x134. Baseline weapon rotation flag already1. Overlay is a strong candidate, NOT proven visual root cause. Pose94distinct arrays saved,188two-passenger replays represent2848sample occurrences,44matching fall cases.
+
+## Isolated implementation
+
+Workspace work/seat_tank_pose_fix. Production0.2.4 and ALL old packages unchanged. Frozen0182 pose/adapter/dispatcher/transaction/animation_sender preserved. Existing observer/probe/sender/binding_sender/driver/input gate/C/DLL/protocol unchanged except source paths in the clone.
+
+pose.lua validates current engine unit/accessor/component/resource BEFORE every new animation getter. Named resource layer8count332 states0/237/238 hash checked. Only a validated Bastion passenger with final top123/102 or lean122/99 can reset observedFall237/238 toEmpty0 via engine set_states(count9), preserving all30other layers and pending queue. Auxiliary layers7=3/17=18 required before clearing. Cross transaction already validates unit/pose and applies final seated layers; overlay cleanup uses target role.
+inspect.lua adds nativeevent0x1e84c4c3 dictionary query. animation_sender.lua sends it after existing action_end ONLY to Bastion passengers; native-route prepare_fall sends ONLY overlay event. Existing schema/network-unit/animator owner/dictionary roundtrip/code/destination checks retained. Resource proves all332overlay states route to0, no outgoing links on seated layers0/13; other event links on7/17 do not apply to captured3/18. Remote delivery/render success remains unconfirmed.
+fall_repair.lua covers native gunner/passenger routes once per settled passenger visit, own locally owned avatar, stable own seat, exact two-peer/coordinator/session identity, no pending operation. No chassis/seat/weapon mutation or ownership request. Known1/3/4-player scope skips before engine access. Extra fresh snapshot only when a new two-player Bastion passenger visit needs checking; no per-frame double captures for other vehicles or already checked visits. Expired-unit guard and no repeated getter on empty overlay tested.
+
+tank_driver.lua adds the canonical native driver-exit call(nil,collection,false) BEFORE reserve/release, AFTER old generic input neutralization. Own locally controlled tank driver only, two peers, exact table/resource/entity/network ref/map row/authority, active flag0/1, component location recheck and flag0readback; one-shot. Matches normal Bastion and Maelstrom driver-exit branches at1192be3/1194137; native driver completion re-enables with low bool byte1. Native cleanup6fe480 setsD18false and executes canonical supporting cleanup; no direct velocity mutation or remote player input write. Actual tank stop/friend takeover still unverified.
+New tank_spec.lua has4relocatable full-body witnesses(tank_driver_active6fe480/context6fea30/animation7056f0/scale5b8790), native caller/callee edges and driver-root agreement. Total89interface checks, both immutable captures25327279/25480438. No build hash whitelist introduced.
+entry.lua connects validated tank-driver permission and native-route repair. dispatcher/adapter allow ONLY heldA/D when source is validated locally owned two-player tank driver with new native interface. Other movement/fire/action checks and pre-mutation abort/new-press recovery retained. W+A still requires releasingW. Both caller quiet checks use the same validated scope; fresh transaction checks unchanged.
+
+## Verification and artifact
+
+Full required old suite PASS:359vehicle-context cases,372real transaction cases(now asserts tank deactivation order),20senderFFI,8old bindingFFI,24tank-driver bindingFFI,312abort/recovery,140outside/136seated/48driver/50gunner/56inputrace; four-build/pointer observer/selection replays;89compatibility checks on2captures; accepted input DLL/C unchanged.
+New PASS:188recorded/resource pose replays/44Fall matches; old residual-overlay reproduction; native/cross lean preservation; modified-resource/accessor/expired-unit before-getter refusal; one-check-per-visit; known non-two-player skip;80actual held-steering input cases both tanks/both hosts/all3driver exits/held-tap; old0182wait reproduction; native tank driver cleanup realFFI+one-shot/identity/ownership/index/flag guards. Native machine-code exit/completion and cleanup run on both captures; external engine/audio/network effects STUBBED. Scalar cleanup alone is not physical motion proof.
+Actual isolated Arsenal backend import/deploy3files/bilingual/payload hashes/purge PASS. Fixture E:\Document\codex\2026-09-21\https-github-com-cowboybingus-bingussharedloader-https\work\packaging_research\manager-fixture-cdf02d7d-d37d-49d6-8a2d-d383a7f96c7b\result.json. No live profile/game.
+ZIP outputs/Vehicle-Seat-Weapon-Sync-Diagnostic-0.18.3.zip: 667972B SHAc6605c6d5e2f874a8fb1ca55425f1f6db4f74e0f5611b1207004b388f41cca34.
+Instructions outputs/Vehicle-Seat-Weapon-Sync-Diagnostic-0.18.3-说明.txt; bilingual README and Arsenal manifest included.
+Review work/seat_tank_pose_fix/artifact-review.json; work/validate_0183.py PASS. Build log work/seat_tank_pose_fix/build-verified.log. New docs guide combined Bastion aim + both tanks held steering + friend takeover/occupied refusal; no full FRV/tanker repeat.
+
+## Next live test / remaining goal
+
+Only Loaderv16+ and0183; disable024both/allold/TankSeatKit/otherseat-control mods; friend unmodded; sameINI; ship30s; two host roles/full game exit between. New each tank friend drives/parks/FULL normal exit outside; installer own primary gunner wait5s.
+Bastion A route1->2->3->2->0->2->0->3->1->3->0. Each passenger immediately lean/continuous left/right/behind aim and short fire without cycling; compare both body/weapon and shot effects. First1->2 native before any cross; sidearm once AFTERprimary passes then driver->passenger immediate firing.
+B both tanks: source0 onlyA1s/KEEP A + left2 key/releaseafterarrival; then0 onlyD1s/KEEP D + gunner1 key/releaseafterarrival. ReleaseW/S/fire/action. Natural stop, no persistent spin; turret/fire controls; normal exit observation. No forced velocity zero expected.
+C installer passenger, friend ordinary driver enter/forward-back-turn-stop; occupieddriver refusal/own remaining vacant routes/friend unaffected; friend FULL exit then installer drive recovery. Maelstrom smoke driver-only/restored and one passenger aim check.
+Any pose/shot/drive/overlap/exit anomaly: STOP model, no cycling/forced-reentry concealment; full restart before independent remaining model. Input-only cancel may release/wait1s/newpress once. Do NOT manufacture failure from excluded startup records or replay successfulFRVs. New logs sameprefix start.version0183. Inspect sync_fall_overlay_invoking/bastion_native_passenger_fall_cleared/tank_driver_exit_invoking/returned/readback and animation_watch; code-return is not remote ACK.
+Still two-player prototype. After current tank repairs validated, continue pending ownership edge states/3-4peer and soloEnhanced integration/final Normal-Enhanced selectable release. Do not mark overall goal complete.

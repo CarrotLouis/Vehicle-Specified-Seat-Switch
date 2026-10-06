@@ -1,0 +1,11 @@
+# TankSeatKit v2.11 review completed, 2026-09-27
+
+User supplied E:/下载/IDMdownload/Compressed/TankSeatKit-v2.11.zip and reports online tank driver/gunner direct switch; asked whether implementation helps. Read-only reference review completed; no addon execution/deployment/gameplay/diagnostic changes. No new runtime data available for that addon.
+
+Extracted source in work/tankseatkit_research/tank_seat_kit.lua (1908 lines). ZIP SHA2d6e08ab0610d876a3ce87ab77b17130455f7289a6a99a04cbee1771a8f140c2. Report outputs/TankSeatKit-v2.11-实现对照与借鉴结论.md. audit.py compared10 game+5engine signatures in both immutable builds25327279 and25480438, all15/15; no full-layout compatibility claim. Native disassemblies saved locally.
+
+Default key branch solo_only=0 but refuses nonowned collection at855-858 and busy at870-875. Uses network_unit+10h for busy, matches0.5.3fix. Calls same reserve/weaponcleanup/release/setrole/restore/pose/authority sequence as ours; final authority invokes native network wrappers, so do not call it purely local/no networking. No pre-operation nonowner acquisition; cannot deliver general unmodified-peer host/guest arbitrary-seat requirement alone. Distinguish session host from actual vehicle owner. User observations consistent with local-owner path but not sufficient remote-state evidence.
+
+Second independent role-hash swap OFF by default, layout43,maxseaters1; do not conflate with default key feature or claim default44 support. Writes two role records, partial failure lacks rollback; count across matched registry entries not proven per-vehicle occupant count. Driver input clear identical to ours, not new residual-spin fix. Successful pcall logged as SWITCH even perform(false,reason); not completion proof.
+
+Reference changes research prioritization: already-owned online tank path can be separately validated; nonowner control-roundtrip0.5.3 still required for its distinct blocker, not a prerequisite to even investigate owner path. No guards removed/no multiplayer build claimed. Latest diagnostic still0.5.3 (STATE_AUTHORITY_BUSY_0.5.3_20260927.md), awaiting actual run, previous0.5.2 did not arm/send. No new diagnostic needed just to review this ZIP. Further runtime claims require targeted data and user wants stop when needed.

@@ -1,0 +1,1 @@
+return {[2817320566]="switch_request",[781741825]="accepted",[3573117718]="snapshot",[3703775495]="transition",[3058200977]="switch_denied",[977592464]="entry_request",[638550375]="exit_request",[4071093220]="entry_denied",[2486397372]="entering"}

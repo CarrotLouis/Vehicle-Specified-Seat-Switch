@@ -1,0 +1,21 @@
+# 0.7.3 active remote animation experiment ready; waiting for live test
+
+Latest user asked continue multiplayer Enhanced research. Created isolated work/seat_remote_animation_diagnostic from0.7.1; preserves prior packages and production. Do NOT claim remote animation fixed; need user two-person live visual result. No new data collected this turn, no live game/config changes.
+
+Artifact outputs/Vehicle-Seat-Integrated-Diagnostic-0.7.3.zip bytes358146 sha2561ef1c2e2c6eff02a527c526052b7ed1f9875359e457f07828c4726fecd015efe. Same diagnostic GUID649bec74-f2d5-490d-a6ed-3f3caef67b0b/resource/global; replace ALL old diagnostics. Runtime requires0.2.4Normal +Loader16+, friendunmoddedhostdriver, installerguest, exactly2players,M102frontpassenger1<->rearleft2, CtrlShiftHome,max2ops/game. Same10secwatch,>=20secbetweenops. Thirdpressignored expected. Do not test Enhanced/othercars/turrets yet.
+
+0.7.3 extends sender with one animation notification after snapshot+transition and before nexttick ownership return. New animation_sender.lua directly calls existing trace_send with explicit descriptors [(type1,size4,avatar_networkref),(type1,size4,dynamic_eventindex),(type0,size4,zero)]. Native bedb90 spills onlyboolbyte into4byte descriptor; explicitvalues ensure paddingzero. Nativewrapper+realhashlookup tested indices17/1396 bothbuilds; activeindex dynamicnotconstant. FFIuint64peer tested.
+
+Uses correctbba250 notification adapter and808810 manager, not0.7.2 wrongrequesthandler. Correct RIP adapter+34dictionary48_8b_05,+4csystems48_8b_2d. notify count3e58/rows3e60/type7. Validates full relocated witnesses,call edges,registry flags/types/target,eventmaproundtrip,uniqueanimatormembership and avatar identity. Prepares beforemutation, rechecks before firstsnapshot; anypending loan retains original returncleanup. One send/no retries. Senderfirst verifiesonlyremotepeerthroughoriginalguards.
+
+Nativehelper UNCHANGED ABI1 hash6eb6d6a078edb767bdbf4276de9e59b62f0762ec5bb593bae41490ba471445b3; still15messagefilter. NEW animation notification NOT in native_ring; Lua sync_animation_end_invoking (preflightdata+index) andsync_animation_end_call_returned only. No remoteACK ornetworkdeliveryproof. readmeexplicit.
+
+Research work/research_073_order_layers.py/json: bothenginecaptures threeAPIinitializerplaces link+B0 toret0; no evidence of specialorderingregistration, but notactiveruntimeAPIread. All31states fromboth071preparedsnapshots checked: entrythenaction_end transitions onlylayers0/13,other29none. Vehiclelayer13 transitions have0.2/0.1s blend; instantstatechange !=renderinstant. Same-ticklocalsendorder !=networkreceive/renderorder. Uservisualtestrequired.
+
+Full buildPASS: bothcaptures74compatwitnesses, nativeexistingRPCs, newnotification16receivercases,no retransmit,falseflag; newwrapperlookup,14preflightnegativecases,FFIpeer/descriptors/once; preflightfailurebeforemutationretainsreturn; alloriginalprobe/cleanup/transport/pose/input/logtests. Arsenal actual isolated backend Normal/Enhancedbothorders exactpayload/purgepass; Enhancedonlypackagingcheck,runtimeblocksEnhanced. Fixture439577d4-410a-4dec-83ad-613afa35b842. No testsremain beforedelivery.
+
+Source build.py packagescurrenttop-level*.lua/*.py/*.json; don'trerunjusttoinspectafternewresearchfilesorwillchangezip. Instructioncopy outputs/Vehicle-Seat-Integrated-Diagnostic-0.7.3-说明.txt. Researchreport outputs/Vehicle-Seat-0.7.3-远端动画研究记录-20260928.md.
+
+PriorZIPs verifiedunchanged071sha6e83737a47f63fe3d7941292af265835e691b3a06b44129910350e411170ba9e;072sha57a8f3ec9f8cc53f16d2d0cf7cbb1b1357a4f3fcf42bf18dead33b9526c7d281;production024sha0e510c2fd3f3e032530d285ea4906093b952a7df606c2c08d199118387793f27.
+
+Next afteruserdata: freeze current logs withhashes; confirmversion073, twoopcompletion, newnotifycall/index/preflight, preservedcontrolreturn/noerrors/localpose; correlatefriendview no/brief/fullanimation. Do nottreatnative15ringmissinganimationasfailure. Ifremotebriefmotionremain investigateblend/receiptordering; don'tpromisefixwithresends. Ifsuccess expandcarefullyhostguest/otherseatrolesandcars; ultimateinstalleronly,mustremaininside,nobothviewentryanimation,occupiedseatrespect; configreleaseintegrationlater. Known tanksteeringlatch explicitlydeferred.

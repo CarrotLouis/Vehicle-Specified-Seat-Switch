@@ -1,0 +1,136 @@
+载具换座 0.3.0 — 按键与组合键清单
+
+配置位置
+%APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini
+首次启动模组后生成；已有配置保留。用记事本编辑并保存，重启游戏生效。
+普通/加强版共用配置，默认仍是 F1–F5。
+
+组合键
+支持 Ctrl、Shift、Alt、Win 中的一个或多个修饰键，加一个主键。
+例：CTRL+1、SHIFT+Q、CTRL+SHIFT+Q、ALT+MOUSE4、RCTRL+NUMPAD1。
+最后一项必须是主键，前面的修饰键顺序不限；大小写不限，允许加号两侧有空格。
+先按住修饰键，再按主键；同一帧按下两者也可以。长按只触发一次。
+先按主键、后补修饰键不会触发，须松开并重新按主键。
+严格匹配修饰键：CTRL+1 不响应 CTRL+SHIFT+1，单独 1 不响应 CTRL+1。
+因此默认 F1–F5 在额外按着 Ctrl/Shift/Alt/Win 时也不会触发。
+CTRL、SHIFT、ALT、WIN 表示任意一侧；L/R 前缀指定左/右侧。
+指定一侧时，同时按住两侧不会匹配该单侧组合。
+切回游戏、关闭带光标菜单时不会补触发已按住的键；松开后再按。
+
+合法主键名称（以下名称直接写在等号右侧；不要写键帽符号）
+
+字母
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+
+主键盘数字
+0 1 2 3 4 5 6 7 8 9
+
+功能键
+F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12
+F13 F14 F15 F16 F17 F18 F19 F20 F21 F22 F23 F24
+
+普通控制与编辑键
+ESC TAB CAPSLOCK BACKSPACE ENTER SPACE
+PRINTSCREEN SCROLLLOCK PAUSE BREAK
+INSERT DELETE HOME END PAGEUP PAGEDOWN
+LEFT RIGHT UP DOWN
+APPS（菜单键）
+
+修饰键（可以单独使用，也可作为组合键前缀）
+CTRL LCTRL RCTRL
+SHIFT LSHIFT RSHIFT
+ALT LALT RALT
+LWIN RWIN
+WIN 仅作为组合键前缀，单独 Windows 键请写 LWIN 或 RWIN。
+组合的最后一项不能再是修饰键；CTRL+SHIFT 这类纯修饰键组合不支持。
+
+标点键（按常见美式/中文键盘键帽对应；其他布局可能不同）
+BACKQUOTE      ` ~
+MINUS          - _
+EQUALS         = +
+LBRACKET       [ {
+RBRACKET       ] }
+BACKSLASH      \ |
+SEMICOLON      ; :
+APOSTROPHE     ' "
+COMMA          , <
+PERIOD         . >
+SLASH          / ?
+OEM_102        部分 ISO 布局的额外斜杠/尖括号键
+例如：CTRL+SEMICOLON。加号键写 EQUALS；小键盘加号写 NUMPADADD。
+若需要以 Shift 为前缀，写 SHIFT+EQUALS 等形式；本功能绑定按键而非输入字符。
+
+数字小键盘
+NUMLOCK
+NUMPAD0 NUMPAD1 NUMPAD2 NUMPAD3 NUMPAD4
+NUMPAD5 NUMPAD6 NUMPAD7 NUMPAD8 NUMPAD9
+NUMPADMULTIPLY    *
+NUMPADADD         +
+NUMPADSUBTRACT    -
+NUMPADDIVIDE      /
+NUMPADDECIMAL     .
+NUMPADENTER       小键盘回车，与 ENTER 为同一绑定
+NUMPADSEPARATOR   部分布局的小键盘分隔符
+CLEAR             小键盘 5 在部分 Num Lock 关闭状态下的信号
+数字绑定需开启 Num Lock；关闭后可能响应 HOME/END/方向键等导航信号。
+主回车和小键盘回车目前不能分别绑定两个座位。
+
+多媒体和常见 108 键额外键
+VOLUME_MUTE VOLUME_DOWN VOLUME_UP
+MEDIA_PREVIOUS MEDIA_NEXT MEDIA_STOP MEDIA_PLAY_PAUSE
+CALCULATOR（等价 LAUNCH_APP2，通常为计算器键）
+LAUNCH_MAIL LAUNCH_MEDIA LAUNCH_APP1 LAUNCH_APP2
+BROWSER_BACK BROWSER_FORWARD BROWSER_REFRESH BROWSER_STOP
+BROWSER_SEARCH BROWSER_FAVORITES BROWSER_HOME
+SLEEP
+108 键的额外四键没有统一定义；这些名称按 Windows 实际收到的键值匹配。
+系统仍可能同时执行音量、计算器、Windows 菜单、睡眠等原本功能。
+
+鼠标按钮
+MOUSE1      左键（LBUTTON）
+MOUSE2      右键（RBUTTON）
+MOUSE3      中键／滚轮按下（MBUTTON）
+MOUSE4      第一个侧键／通常为后退（XBUTTON1）
+MOUSE5      第二个侧键／通常为前进（XBUTTON2）
+例：CTRL+MOUSE4、SHIFT+MOUSE5。
+这是物理左右按钮；Windows 交换左右主键设置不会交换这些名称。
+超过两个的额外侧键、DPI 键可在鼠标厂商软件中映射成受支持的键后使用。
+滚轮向上/向下滚动与水平滚动不是中键按下，本版不支持绑定这些滚动动作。
+
+别名
+ESCAPE=ESC，RETURN=ENTER，PRTSC=PRINTSCREEN，INS=INSERT，DEL=DELETE
+PGUP=PAGEUP，PGDN=PAGEDOWN，MENU=APPS，GRAVE=BACKQUOTE
+CONTROL=CTRL，LCONTROL=LCTRL，RCONTROL=RCTRL
+LBUTTON=MOUSE1，RBUTTON=MOUSE2，MBUTTON=MOUSE3，XBUTTON1=MOUSE4，XBUTTON2=MOUSE5
+
+禁用
+NONE
+同一车型允许多个 NONE。
+
+冲突规则
+同一车型不能把相同或重叠的绑定分配给多个座位。例如 CTRL+1 与 LCTRL+1 重叠。
+1 与 CTRL+1 可以分开绑定，LCTRL+1 与 RCTRL+1 也可以。
+单独 CTRL 与 CTRL+1 不可分配给不同座位，否则先按 Ctrl 就会提前触发。
+存在重复或上述重叠时，该车型整组恢复默认键，日志记录原因。
+无效键名不覆盖之前的值；通常仍使用该座位默认键。缺少的项使用默认值。
+同帧按下两个座位绑定时拒绝换座，避免任意选择。
+
+范围与限制
+覆盖 Windows 能报告的标准全尺寸键盘按键和五个标准鼠标按钮。
+Fn、灯光/宏层切换、部分电源键等由固件处理的功能，若不向 Windows 发送标准键值，模组无法直接识别。
+Win 组合键、Alt+Tab、Ctrl+Alt+Delete 等仍受系统处理，不能保证可用于游戏内换座。
+模组只读取按键，不吞掉游戏或系统原本的快捷键。选择与游戏操作无冲突的绑定。
+Pause、PrintScreen、媒体键等在某些设备/驱动上可能只产生极短信号，逐帧检测可能错过，需在本机实测。
+当前通过离线模拟验证组合键逻辑；尚未替代你的实际键盘、鼠标和游戏内验证。
+
+M-102 示例（替换配置中的同名节，不要重复追加同名键）
+[m102]
+driver=CTRL+1
+front_passenger=CTRL+2
+rear_left=CTRL+3
+rear_right=CTRL+4
+gunner=CTRL+MOUSE4
+
+资料：Microsoft Virtual-Key Codes / GetAsyncKeyState
+https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getasynckeystate

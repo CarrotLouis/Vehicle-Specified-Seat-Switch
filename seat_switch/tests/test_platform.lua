@@ -1,0 +1,13 @@
+local ffi=require('ffi')
+local platform=assert(loadfile('work/seat_switch/src/platform.lua'))()
+local api=platform()
+local buf=ffi.new('uint8_t[8]',{1,2,3,4,5,6,7,8})
+assert(api.read(buf,8)==string.char(1,2,3,4,5,6,7,8))
+assert(api.read(ffi.cast('void *',0),8)==nil)
+local mod=assert(api.module('lua51.dll'))
+local path='work/seat_switch/tests/lua51.sha256'
+local f=assert(io.open(path,'rb'));local expected=f:read('*a');f:close()
+assert(api.hash_module(mod)==expected)
+assert(ffi.sizeof('VSSCursorInfo')==24)
+assert(type(api.input_allowed())=='boolean')
+print('PASS: platform safe reads and CNG hashing against actual loaded Lua runtime; cursor structure ABI. No game process accessed or modified.')

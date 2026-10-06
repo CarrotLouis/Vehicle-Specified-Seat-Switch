@@ -1,0 +1,43 @@
+# 0.12.1 accepted; 0.13.0 local-owner / friend aboard ready
+
+Latest user: long hold and tap both switch to gunner, practically no perceived delay; test passed. Continue multiplayer Enhanced. No new DeepSeek work or subagents. Production0.2.4 and earlier diagnostics are preserved.
+
+## Accepted evidence
+
+`work/review_0121.py` freezes `work/seat_input_thread_fix/capture-20261001-0121/`: main `VehicleSeatIntegrated-20261001-162104-32752-61205578.log`648672B, status1588B, loader1051B, SHA manifest/analysis. Startup version0.12.1, native bridge pending->ready in31ms;4 consumed inputs,0 discarded/failure. Four completed1->4->1->4->1, all borrowed_returned,4 confirmed returns,2 personal clear/bind pairs;0 read_gap/cancel/stopped/incomplete. Coordinator P2 confirms friend-host. Several occupied-driver inputs correctly refused. Normal shutdown.
+
+Input tick is absolute GetTickCount64; filename's last timer61205578 is recorder origin. Analyzer uses that origin rather than subtracting raw absolute input tick from relative log time. Native press->Lua submit delays0/15/16/0ms; consumed->submit0ms in all4. Gunner actual mutation/sync starts140/78ms after submit. Returns to front mutation329/78ms, sync344/94ms. Full completions844/1016/750/766ms include existing0.5s ownership confirmation and are not visual-seat latency. User reports held/tapped result successful and practically immediate; no attempt to claim zero network time.
+
+The cross-thread GUI installation / real binding priority is now accepted IN GAME for friend-host borrowed M102 front/gunner. Earlier rear-seat and installer-host/owned-outside evidence remains valid; this short run does not independently retest every context.
+
+## New bounded scope
+
+`work/prepare_0130.py` clones accepted0121 text sources into `work/seat_aboard_passenger_test`. Release0.13.0 adds already-local M102 ownership with one unmodded friend settled in a personal-weapon passenger seat1/2/3 of the SAME car. Existing scope required this friend outside, so this is a useful missing common scenario, not a new authority mechanism. Host and chassis owner remain distinct.
+
+`adapter.lua` preserves all common guards. Local branch identifies the sole remote avatar, permits outside or a settled seat(role3,node1..3), verifies friend entity owner=destination peer, native occupancy of that seat=true, friend node!=own source. Mounted remote gunner or remote driver under already-local ownership remain rejected. Target vacancy/reservation guards unchanged. Tickets record remote avatar ID/unit, aboard flag and seat; identity/seat/entry-exit changes reject before mutation and on confirmation. Fresh preflight after transaction preparation and before sync checks remain. Local owner is never borrowed or returned; own driver identity is still required at source0 and driver must be empty at other local sources.
+
+Capture summary now includes remote_occupants id/unit/collection/node/role so the next data can establish friend preservation and actual authority. Production snapshot/sampler are unchanged. Existing borrowed friend-driver cleanup and late-grant recovery unchanged. The local transaction body is unchanged (only comment updated), personal/animation/binding/sender/probe/dispatcher/driver/input source behavior preserved.
+
+Input DLL11264B exact accepted0121 SHA2c1c290b4e869fbadd1cba4fdaa8d042731359d497d006287e12395c496e0e1b reused; no new native input in this experiment. A first source-identical rebuild in the new directory produced a different DLL hash568097...; unpublished preliminary ZIPf57ff... was replaced. Build now checks the unchanged C SHA8da706... and explicitly preserves the accepted binary (fallback to Source-inclusive DLL when distributed). Final helper and extracted-content filename are identical to0121. Final build/packaging rechecked after this repair. Original network helper remains6eb6d6a078edb767bdbf4276de9e59b62f0762ec5bb593bae41490ba471445b3.
+
+## Validation boundaries / debug
+
+`test_aboard_adapter.lua` checks72 permitted source/target/friend-passenger/host combinations using the real adapter, no ownership sends, unchanged remote avatar/seat; invalid owner, missing/occupied target, remote driver/gunner/seat transition, ID/unit/seat/aboard changes, peer counts, host migration and preparation races refuse before mutation. Real dispatcher/probe/adapter holds three bindings through0->4->2->0 for both host identities, retains friend front and owner, plus occupied-front refusal. Engine/RPC effects are simulated. Initial integration fixture omitted the physical Ctrl state for Ctrl+Z and raised front Z simultaneously; corrected fixture to supply real modifier state, not game code.
+
+`test_aboard_receiver.py` executes captured snapshot/transition/tick/no-action native instructions with TWO mapped active seater slots7/8 in the same car, correct64B stride. Hash keys map7->0,8->1; both records initialized and remote sentinel bytes retained. For30 cross-route combinations per each of25327279/25480438, own current/role/reservation reach target, remote seat64B/entity24B remain unchanged, set-role targets own mapped slot0, no exit helper. External avatar/attachment/role engine side effects remain stubbed; no wire acceptance/rendering proof. Initial new harness omitted tick and observed current/reserved changed but old role; adding the actual tick matches the accepted receiver protocol and completes role update. No runtime protocol change was made to hide the harness failure.
+
+Full `build-verified.log` exit0: original81 interface witnesses/two captures, native field/sender/animation/binding oracles, own-avatar transaction/driver proof, borrowed recovery and all previous input/FFI/GUI private-window/callback/logging checks pass, including new tests. No game launched.
+
+`validate_0130.py` / `artifact-review.json` verifies exact accepted input binary; expected unchanged runtime modules; bundled source/DLL/tests/instructions in ZIP; production024 unchanged. Real Arsenal backend fixture import/deploy/3 payload hashes/purge PASS: `work/packaging_research/manager-fixture-2b74134e-97a3-4c6e-977e-8eb53d2470d5/result.json`. No live game/profile/INI writes.
+
+Final artifact `outputs/Vehicle-Seat-Weapon-Sync-Diagnostic-0.13.0.zip`,502535B, SHA860f5a3412c082613d03727629a57b18ff940653a897818761a6341800ebc97c. Instructions `outputs/Vehicle-Seat-Weapon-Sync-Diagnostic-0.13.0-说明.txt`, bilingual Arsenal manifest and README/source/tests included. DiagnosticGUID/resource/global unchanged, replace old diagnostic.
+
+## STOP for actual user test
+
+Two short sessions: first INSTALLER hosts, second friend hosts. Fully close/restart between them. Loader16+ +0130 ONLY, disable024 both variants/all old diagnostics/TankSeatKit/other seat mods. Friend unmodded. Ship30s. Read-only INI; current local keys changed by USER to driverX/frontZ/rear-leftCtrlZ/rear-rightCtrlX/gunnerCtrlMOUSE2. Do not restore old frontMOUSE2. DefaultsF1–F5.
+
+Each session: fresh M102, installer normally enters driver/drives/turns/parks, friend enters front and remains there. Safe level ground, settle5s, other seats free. Installer0->4 (hold~1s if desired), test own posture/barrel/short burst; press occupiedfront once (must refuse and not displace friend); wait5s ->2, immediately lean/fire current personal weapon with no weapon change, compare both views; wait5s ->0, immediately drive/turn both ways/stop, no turret retained. Friend briefly tests own lean/fire after steps1/3 settle, releases/retracts before next switch; must stay correct front with working weapon throughout. Only3 valid cross requests +1 occupied refusal per session. Exit normally/full close. First anomaly STOP, no second run needed. If actual owner/guard prevents firststep, STOP/report, don't force friend entry/exit/reinstall combinations.
+
+Expected3 already_local completions and3 local_authority_preserved per session, no Lua authority request/return on this path. Normal native control/weapon messages can still exist; don't require empty transport trace. New local-owner/friend-aboard visuals, weapon and controls are UNVERIFIED until actual run.
+
+Remaining full objective: already-local remote driver/gunner, borrowed vacant driver destination/arbitration,3–4peer fanout, M103/M104/two tanks/tanker integration, host/guest coverage and final Normal/Enhanced production package. M104 guest flamer roundtrip previously accepted separately0103, not lost. Minor remote entry motion accepted/deferred; tank steering issue deferred. Production024 SHA0e510c2fd3f3e032530d285ea4906093b952a7df606c2c08d199118387793f27 remains unchanged. No further data needed to construct this fix; now STOP for the bounded new runtime evidence.

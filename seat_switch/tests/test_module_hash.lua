@@ -1,0 +1,10 @@
+local ffi=require('ffi')
+ffi.cdef[[void *GetModuleHandleA(const char *);]]
+local hash=assert(loadfile('work/seat_switch/src/module_hash.lua'))()
+local module=ffi.load('kernel32').GetModuleHandleA('lua51.dll')
+assert(module~=nil)
+local file=assert(io.open('work/seat_switch/tests/lua51.sha256','rb'))
+local expected=file:read('*a'):match('%x+');file:close()
+assert(hash(module)==expected,'CNG digest differs from Python SHA256')
+assert(not pcall(hash,ffi.cast('void *',1)),'Invalid module should fail safely')
+print('PASS: real Windows module file hashing matches independent SHA256; invalid module rejected.')

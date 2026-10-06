@@ -1,0 +1,95 @@
+-- Select only the two vehicle pose layers. All other layers are preserved.
+-- IDs/hashes come from this build's avatar state machine, not guessed names.
+return function(api,profile)
+ local ffi=api.ffi
+ local exe=assert(api.module('helldivers2.exe'),'Missing engine module')
+ local function bind(name,ctype)
+  local p=assert(profile.engine_functions[name])
+  assert(api.read(exe+p.rva,#p.bytes)==p.bytes,'Engine signature mismatch: '..name)
+  return ffi.cast(ctype,exe+p.rva)
+ end
+ local unit=bind('unit','void *(*)(uint32_t)')
+ local set_states=bind('animation_set_states','void (*)(uint32_t,const int32_t *)')
+ local get_states=bind('animation_get_states','void *(*)(int32_t *,uint32_t)')
+ local getter=profile.engine_functions.animation_component
+ assert(api.read(exe+getter.rva,#getter.bytes)==getter.bytes,'Animation component signature mismatch')
+ local enqueue=profile.engine_functions.animation_event_enqueue
+ assert(api.read(exe+enqueue.rva,#enqueue.bytes)==enqueue.bytes,'Animation queue signature mismatch')
+ local layout=profile.animation
+ local targets={m102={'front_left','front_right','back_left','back_right','frv_gunner'},
+  m103={'front_left','front_right','back_left','back_right'},
+  m104={'front_left','front_right','frv_gunner'},
+  bastion={'tank_top','tank_gunner','tank_top','tank_top'},
+  maelstrom={'tank_top','tank_gunner','tank_top','tank_top'}}
+ local p={}
+ local function read(address,n)
+  local b=api.read(address,n);assert(b and #b==n,'Unreadable animation state');return b
+ end
+ local function ptr(address)return assert(api.pointer(read(address,8)),'Invalid animation pointer') end
+ local function u32(b,o)
+  local a,c,d,e=b:byte(o+1,o+4);assert(e);return a+c*256+d*65536+e*16777216
+ end
+ local function offset(n)assert(n>=0 and n<0x2000000,'Animation offset exceeds bound');return n end
+ function p.check(s)
+  assert(targets[s.vehicle],'No direct pose profile')
+  local object=unit(s.avatar_unit);assert(object~=nil,'Avatar engine unit expired')
+  object=ffi.cast('uint8_t *',object)
+  local vtable=ptr(object)
+  assert(vtable==exe+layout.unit_vtable,'Unsupported avatar unit class')
+  assert(ptr(vtable+0x1b0)==exe+getter.rva,'Animation component accessor changed')
+  -- This getter is exactly mov rax,[rcx+178h];ret. Read it without an indirect call.
+  local machine=ptr(object+layout.component_offset)
+  local resource=ptr(machine+0x28);local header=read(resource,60)
+  assert(u32(header,4)==layout.layers,'Avatar animation layer count changed')
+  local groups=resource+offset(u32(header,8))
+  local group_table=read(groups,4+layout.layers*4)
+  assert(u32(group_table,0)==layout.layers,'Invalid animation group table')
+  -- Validate bounds and every target state name before the first gameplay change.
+  for _,pair in pairs(layout.states) do for _,state in ipairs(pair) do
+   local layer=groups+offset(u32(group_table,4+state.layer*4))
+   local row=read(layer,12+state.count*4)
+   assert(u32(row,8)==state.count,'Avatar animation state count changed')
+   local address=layer+offset(u32(row,12+state.index*4))
+   assert(read(address,8)==state.hash,'Avatar animation state identity changed')
+  end end
+  local q=layout.queue;local world=ptr(object+q.world_offset)
+  local count=u32(read(world+q.count_offset,4),0)
+  assert(count<q.capacity-128,'Animation command queue near capacity')
+  s.pose_context={object=object,world=world,start=count}
+  return true
+ end
+ function p.apply(s,target)
+  local name=assert(targets[s.vehicle][target+1],'No target pose')
+  local context=assert(s.pose_context,'Pose was not validated')
+  local q=layout.queue
+  assert(ptr(context.object+q.world_offset)==context.world,'Animation world changed')
+  local finish=u32(read(context.world+q.count_offset,4),0)
+  assert(finish>=context.start and finish<=context.start+128,'Animation command batch changed')
+  local skipped=0
+  for i=context.start,finish-1 do
+   local address=context.world+q.records_offset+i*q.stride
+   local row=read(address,q.stride)
+   -- Only this avatar's NEW entry events from this synchronous switch batch.
+   -- Keep all earlier commands, other units, non-entry events, and queue counts.
+   if u32(row,0)==s.avatar_unit and u32(row,0x50)==3 and q.entry_events[u32(row,4)] then
+    assert(read(address,q.stride)==row and api.replace(address+4,row:sub(5,8),q.end_event),'Entry event changed')
+    skipped=skipped+1
+   end
+  end
+  -- Unit.animation_event queues commands. Setting a pose alone is insufficient:
+  -- the queued entry clip would otherwise overwrite it at the next world update.
+  -- Its normal completion event has no outgoing link on any selected final pose.
+  local values=ffi.new('int32_t[33]')
+  for i=0,31 do values[i]=-1 end -- engine leaves these layers untouched
+  for _,state in ipairs(layout.states[name]) do values[state.layer]=state.index end
+  values[32]=14 -- highest selected layer is 13; no other layer is reset
+  set_states(s.avatar_unit,values)
+  local actual=ffi.new('int32_t[33]');get_states(actual,s.avatar_unit)
+  assert(actual[32]==layout.layers,'Animation layer count changed during switch')
+  for _,state in ipairs(layout.states[name]) do
+   assert(actual[state.layer]==state.index,'Engine did not apply the requested seat pose')
+  end
+  return 'pose_layers='..tonumber(actual[0])..','..tonumber(actual[13])..' entry_action_skipped=true entry_events_replaced='..skipped
+ end
+ return p
+end

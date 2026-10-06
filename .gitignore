@@ -64,3 +64,4 @@
 
 # Authored provenance needed to rebuild the current package.
 !/seat_release_040/baseline.json
+!/seat_release_041/baseline.json

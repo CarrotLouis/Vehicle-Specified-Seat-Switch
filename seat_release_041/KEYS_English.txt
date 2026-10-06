@@ -1,0 +1,73 @@
+Vehicle Specified Seat Switch 0.4.1 — Keys and combinations
+
+CONFIGURATION
+%APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini
+Created on first launch; existing settings are preserved. Both variants share it. Edit, save and restart the game. Defaults remain F1–F5.
+
+COMBINATIONS
+Use one or more distinct Ctrl, Shift, Alt or Win modifier groups followed by ONE primary key.
+Examples: CTRL+1, SHIFT+Q, CTRL+SHIFT+Q, ALT+MOUSE4, RCTRL+NUMPAD1.
+Case is ignored; spaces around + are allowed. Modifier order is flexible, but the primary key must be last.
+Hold the modifier first, then press the primary key. Pressing both in the same frame also works. Holding a binding does not repeat.
+Pressing the primary key before adding a modifier does not trigger: release and press the primary key again.
+Modifiers match exactly: CTRL+1 does not match CTRL+SHIFT+1; plain 1 does not match CTRL+1. Default F1–F5 likewise do not trigger while extra modifiers are held.
+CTRL, SHIFT, ALT and WIN accept either side. L/R variants require that side; holding both sides does not match a single-side binding.
+Already-held keys do not trigger when returning to the game or closing a cursor menu; release and press again.
+
+SUPPORTED KEY NAMES
+Use these names on the right of =, rather than punctuation symbols.
+Letters: A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+Number row: 0 1 2 3 4 5 6 7 8 9
+Function keys: F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12 F13 F14 F15 F16 F17 F18 F19 F20 F21 F22 F23 F24
+Control/editing: ESC TAB CAPSLOCK BACKSPACE ENTER SPACE PRINTSCREEN SCROLLLOCK PAUSE BREAK INSERT DELETE HOME END PAGEUP PAGEDOWN LEFT RIGHT UP DOWN APPS
+Modifiers, usable alone: CTRL LCTRL RCTRL SHIFT LSHIFT RSHIFT ALT LALT RALT LWIN RWIN
+WIN is a combination prefix only; use LWIN or RWIN for a standalone Windows key.
+Punctuation: BACKQUOTE MINUS EQUALS LBRACKET RBRACKET BACKSLASH SEMICOLON APOSTROPHE COMMA PERIOD SLASH OEM_102
+BACKQUOTE is the grave/tilde key. EQUALS is the =/+ key; use SHIFT+EQUALS if Shift is intended. OEM_102 is the extra ISO-layout key. Bindings represent physical key signals rather than typed characters; layouts can differ.
+Numpad: NUMLOCK NUMPAD0 NUMPAD1 NUMPAD2 NUMPAD3 NUMPAD4 NUMPAD5 NUMPAD6 NUMPAD7 NUMPAD8 NUMPAD9 NUMPADMULTIPLY NUMPADADD NUMPADSUBTRACT NUMPADDIVIDE NUMPADDECIMAL NUMPADENTER NUMPADSEPARATOR CLEAR
+Turn Num Lock on for number bindings. With it off, navigation keys may be reported instead. ENTER and NUMPADENTER are the same binding and cannot be assigned separately.
+Media/application: VOLUME_MUTE VOLUME_DOWN VOLUME_UP MEDIA_PREVIOUS MEDIA_NEXT MEDIA_STOP MEDIA_PLAY_PAUSE LAUNCH_MAIL LAUNCH_MEDIA LAUNCH_APP1 LAUNCH_APP2 CALCULATOR
+Browser/system: BROWSER_BACK BROWSER_FORWARD BROWSER_REFRESH BROWSER_STOP BROWSER_SEARCH BROWSER_FAVORITES BROWSER_HOME SLEEP
+CALCULATOR is an alias of LAUNCH_APP2. The four extra keys on a 108-key keyboard are not standardized; support depends on the Windows key signal sent.
+
+MOUSE
+MOUSE1: physical left button (LBUTTON)
+MOUSE2: physical right button (RBUTTON)
+MOUSE3: middle/wheel press (MBUTTON)
+MOUSE4: first side button, usually Back (XBUTTON1)
+MOUSE5: second side button, usually Forward (XBUTTON2)
+Examples: CTRL+MOUSE4, SHIFT+MOUSE5. Windows swapped primary-button settings do not swap these names.
+Wheel scrolling, horizontal scrolling, DPI buttons and extra side buttons beyond these two are not directly supported. Vendor software may remap extra buttons to a supported key.
+
+ALIASES
+ESCAPE=ESC RETURN=ENTER PRTSC=PRINTSCREEN INS=INSERT DEL=DELETE
+PGUP=PAGEUP PGDN=PAGEDOWN MENU=APPS GRAVE=BACKQUOTE
+CONTROL=CTRL LCONTROL=LCTRL RCONTROL=RCTRL
+LBUTTON=MOUSE1 RBUTTON=MOUSE2 MBUTTON=MOUSE3 XBUTTON1=MOUSE4 XBUTTON2=MOUSE5
+
+DISABLING AND CONFLICTS
+NONE disables a seat binding. Multiple NONE entries per vehicle are allowed.
+Unsupported combinations include two ordinary keys (Q+E), modifiers only (CTRL+SHIFT), repeated modifier groups (CTRL+LCTRL+1), and CTRL+NONE.
+Bindings in the same vehicle must not overlap. CTRL+1 and LCTRL+1 overlap. Plain 1 and CTRL+1 are allowed; LCTRL+1 and RCTRL+1 are allowed.
+Standalone CTRL and CTRL+1 cannot target different seats: pressing Ctrl would trigger too early.
+Duplicate/overlapping bindings restore the entire vehicle's defaults and log the reason. Invalid key names do not replace the previous value; missing settings use defaults.
+Two seat bindings triggered in the same frame are rejected.
+
+LIMITATIONS
+Fn, lighting/macro-layer keys and firmware-only buttons are unavailable unless they send a supported Windows key signal.
+System actions still apply. Win shortcuts, Alt+Tab and Ctrl+Alt+Delete cannot be relied on as seat bindings. Enhanced prioritizes matched seat keys in a validated switching context to prevent unwanted lean actions. It cannot suppress Windows system shortcuts; existing game actions may still conflict in other contexts.
+F2/F3/F5 can also toggle game performance displays. Pick bindings that do not conflict with your controls.
+Pause, PrintScreen and some media buttons may emit signals too brief for frame polling on certain devices; verify them on your hardware.
+
+EXAMPLE — replace the existing section, do not append duplicate keys
+[m102]
+driver=CTRL+1
+front_passenger=CTRL+2
+rear_left=CTRL+3
+rear_right=CTRL+4
+gunner=CTRL+MOUSE4
+
+Reference: https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+
+此清单仅适用于 VehicleSeatSwitch.ini；ModBindingsMenu 按游戏原生菜单允许的范围设置。
+This list is for VehicleSeatSwitch.ini; ModBindingsMenu uses the native menu's supported range.

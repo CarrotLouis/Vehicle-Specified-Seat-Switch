@@ -1,3 +1,11 @@
+# Current — 0.4.1 GameGuard-response revision (2026-10-07)
+
+User reports GameGuard shutdown during attempted mode switch after enabling 0.4.0 performance blocking. Log has patch ON at 04:48:10, no Enhanced apply, shutdown 04:49:23; exact detection cause unproven. 0.4.1 completely withdraws executable profiler patch modules/option and ignores its old saved ON. One resident Enhanced controller; Normal is Lua-only seat permission restriction, same multiplayer route, no mode-triggered helper reinstall. 31 regression groups plus isolated Arsenal/ZIP verification passed. Live retest/anti-cheat acceptance unverified; request only one solo retest, no group collection. Chinese repository README added. See work/STATE_MENU_REVISION_20261007.md.
+
+ZIP outputs/Vehicle-Specified-Seat-Switch-0.4.1.zip SHA cd05194d24a0a2a5ee6eb34fb4beedfcc3b58b41ca184008597a9e6ec74601c1. Older packages preserved. Follow user-authorized end-of-conversation Git push; root work, exclude outputs/logs/auth, no Releases. Current source seat_release_041.
+
+---
+
 # Current task — 0.4.0 menu integration (2026-10-07)
 
 0.4.0 is packaged with ModOptionsMenu hot Normal/Enhanced, independent INI/ModBindingsMenu sources and optional F2–F5 profiler checks disabled by default. Five native seat actions, 13 languages, pending-operation barrier. 33 offline groups and isolated Arsenal import/deploy/purge passed; new UI/HUD behavior awaits a short solo live check. No new three/four-player collection requested. Four-player live validation remains pending.

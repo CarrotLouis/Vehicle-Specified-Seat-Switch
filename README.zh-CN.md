@@ -2,80 +2,82 @@
 
 [English](README.md) | 简体中文
 
-《绝地潜兵 2》载具指定座位切换模组：保持在车内，用自定义按键切换到指定空座。目标已被队友占用或预留时，拒绝切换。支持 M-102 机枪 FRV、M-103 补给 FRV、M-104 喷火 FRV、TD-220 Bastion MK XVI、TD-110 Maelstrom 和特殊任务油罐车。
+《绝地潜兵 2》载具指定座位切换模组：保持在车内，用自定义按键切换到指定空座。目标被队友占用或预留时拒绝切换。加强版支持单人和多人，使用者可以是房主或客机，其他队友无需安装。
 
-加强版支持单人和多人，使用者可以是房主或客机，其他队友无需安装。只有希望使用本功能的玩家需要安装。
+## 安装与配置
 
-## 当前版本与安装
+当前修订为 **0.4.2**，使用统一安装包。
 
-当前修订为 **0.4.1**，源码位于 [`seat_release_041`](seat_release_041)。安装包由作者自行发布到本仓库 Releases。本仓库不提交 `outputs` 中的安装包，也不提交游戏原始文件、模块转储、采集日志、下载工具或本机登录信息。
+1. 退出游戏，启用 [Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader) v18 或以上及必需的 [ModOptionsMenu](https://github.com/CowboyBingus/ModOptionsMenu)。
+2. 按需启用 [ModBindingsMenu](https://github.com/CowboyBingus/ModBindingsMenu)，每个菜单只安装一份。
+3. 将整个 ZIP 导入 Arsenal，启用“安装模组”并部署。禁用旧换座诊断包及其他换座控制模组。
+4. 启动后在舰船上等约 30 秒，在游戏选项的 MODS 页选择本模组。
 
-**0.4.0 已有用户报告 GameGuard 强制关闭游戏，应升级至 0.4.1。** 此次退出前，日志记录到开启性能监控屏蔽；用户随后尝试切换版本。退出前未记录加强版生效，不能仅凭这轮日志证明版本切换是原因。0.4.1 完整移除了监控屏蔽的游戏指令修改及其选项，不提供绕过或修改 GameGuard 的功能。新包仍需实机复测，不能保证任何模组组合均被反作弊接受。
+首次默认为普通版、INI 按键策略、性能监控屏蔽关闭。普通／加强版在游戏内切换。未安装 ModBindingsMenu 时，按键策略固定为 INI，菜单不提供其策略选项；以前保存的菜单策略也不会使按键失效。
 
-安装步骤：
+安装的是完整加强版运行时；普通版通过 Lua 座位权限表限制可用组合。两者共用常驻控制器和联机接口。正在执行的换座先完成，再应用版本或按键来源变化。
 
-1. 完全退出游戏，启用 [Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader)。菜单依赖要求 v18 或以上。
-2. 启用 [ModOptionsMenu](https://github.com/CowboyBingus/ModOptionsMenu) 和 [ModBindingsMenu](https://github.com/CowboyBingus/ModBindingsMenu)，可以使用 Vanilla Plus Megapack 中的对应选项，每个菜单只安装一份。
-3. 将 0.4.1 ZIP 整包导入 Arsenal，启用模组并重新部署。禁用旧换座诊断包及其他换座控制模组。
-4. 启动后在舰船上等待约 30 秒，完成初始化。
-5. 在游戏选项的 MODS 页选择 Vehicle Specified Seat Switch，设置版本和按键策略。
-
-## 普通版与加强版
-
-安装的是完整加强版运行时，首次默认普通版。普通版仅通过 Lua 座位权限表限制可用组合；加强版解除这些分组限制。两者使用相同的常驻控制器、适配器和联机接口，版本切换不重新加载模组，也不改写游戏指令。已有换座请求会先完成，再应用新选择。
-
-| 车型 | 默认键位 | 普通版 | 加强版 |
+| 车型 | INI 默认键位 | 普通版 | 加强版 |
 | --- | --- | --- | --- |
-| M-102 Gunner FRV | F1 驾驶、F2 副驾、F3 后左、F4 后右、F5 机枪 | 前排互换、后排互换 | 上述所有空座之间切换 |
-| M-103 Supply FRV | F1 驾驶、F2 副驾、F3 后左、F4 后右 | 前排互换、后排互换 | 上述所有空座之间切换 |
-| M-104 Incinerator FRV | F1 驾驶、F2 副驾、F3 喷火 | 前排互换 | 上述所有空座之间切换 |
-| Bastion / Maelstrom | F1 驾驶、F2 炮位、F3 左乘员、F4 右乘员 | 炮位与两乘员位互换 | 上述所有空座之间切换 |
+| M-102 Gunner FRV | F1 驾驶、F2 副驾、F3 后左、F4 后右、F5 机枪 | 前排互换、后排互换 | 所有空座之间切换 |
+| M-103 Supply FRV | F1 驾驶、F2 副驾、F3 后左、F4 后右 | 前排互换、后排互换 | 所有空座之间切换 |
+| M-104 Incinerator FRV | F1 驾驶、F2 副驾、F3 喷火 | 前排互换 | 所有空座之间切换 |
+| Bastion / Maelstrom | F1 驾驶、F2 炮位、F3 左乘员、F4 右乘员 | 炮位与两乘员位互换 | 所有空座之间切换 |
 | 任务油罐车 | F1 驾驶、F2 炮位 | 两座互换 | 两座互换 |
 
-普通版同样检查空位，不能切换到队友的座位。换座前停止射击、探头并等待角色坐稳。同车队友可以继续驾驶。
+INI 位于 `%APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini`，首次自动生成并保留已有配置。支持键盘、五个鼠标键和组合键，如 `CTRL+1`、`SHIFT+Q`。修改后重启游戏读取。[完整键位说明](docs/KEYS_按键清单.txt)。
 
-## 两套独立按键配置
+ModBindingsMenu 的五个座位动作初始未绑定，请在游戏原生按键设置的 MODS 页自行绑定。它与 INI 独立保存，切换来源不会覆盖任一配置。INI 生效时，第一个动作标签提示当前来源及切换方式。[详细安装与使用说明](docs/README_中文.txt)。
 
-“按键策略”可随时在以下来源之间切换，首次默认 INI。配置各自保存，互不覆盖。
+## 本次修订
 
-**VehicleSeatSwitch.ini**：首次初始化生成在 `%APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini`。支持各车型独立键位、键盘、五个鼠标键以及组合键，例如 `CTRL+1`、`SHIFT+Q`、`CTRL+SHIFT+MOUSE4`。编辑文件后重启游戏读取；游戏内更换策略不需要重启。完整清单见 [`KEYS_按键清单.txt`](seat_release_041/KEYS_按键清单.txt)。
+- 修复 Maelstrom 驾驶状态已非活动时，过严预检导致整个模组停止的问题。只读预检拒绝不会阻止后续请求。
+- 菜单独立于换座循环更新。意外的加强版运行错误发生后，保留菜单和经过检查的普通版功能；加强版暂停以避免继续使用不完整状态。
+- 按键页直接读取已应用的策略，修复来源提示一直停留在 INI 的问题。
+- 补齐实际 `tc`、`pt`、`ms` 语言代码，对应繁体中文、巴西葡萄牙语和拉美西班牙语。保留 13 套翻译与英语地区变体。
+- 重新提供默认关闭的性能监控屏蔽，使用四个键名查询数据值，保留原生数字按键映射，进入原生菜单时恢复。该替代方式仍需实机短测。
 
-**ModBindingsMenu**：在游戏鼠标／键盘或手柄按键配置的 MODS 页设置本模组的五个座位动作。原生自动分配动作初始未绑定，需要自行指定按键。座位编号适用于所有车型，第三个动作同时对应后左／左乘员／M-104 喷火位。支持该菜单允许的设备和触发类型，不复制 INI 的组合键规则。
+0.4.0 的游戏指令修改方案已停用。用户已确认 0.4.1 热切换不再触发 GameGuard；这不代表 0.4.2 新方案已通过实机验证。
 
-INI 策略生效时，原生按键列表第一行显示当前来源和切换提示。仍可编辑保存菜单键位，但只有选中菜单策略才生效。界面文字跟随游戏文本语言，内置 13 种语言。
+## 工程目录
 
-F2–F5 仍可能与游戏性能监控冲突。0.4.1 撤下了会修改游戏指令的屏蔽方案；目前建议改用专用组合键，例如在 INI 中配置 `CTRL+1` 至 `CTRL+5`。如果原生菜单键也用于射击、探头或移动，可能需要释放该操作后完成跨区换座。
+| 目录 | 内容 |
+| --- | --- |
+| `src/` | 当前 Lua 功能、菜单、按键及接口契约 |
+| `native/` | 接收门和按键辅助模块源码 |
+| `tests/` | 当前回归测试及自编夹具 |
+| `scripts/` | 构建、校验、打包和 Git 同步工具 |
+| `docs/` | 玩家文档、架构、当前状态及历史记录 |
+| `examples/` | INI 示例 |
+| `research/archive/` | 保留的历史实验、失败尝试和基线 |
+| `research/scripts/` | 保留的历史分析脚本 |
+| `build/`、`local_data/`、`vendor/` | 构建产物、私有采集和外部依赖，不提交 Git |
 
-## 验证与反馈
+历史记录保留原来的路径和证据。当前构建入口以 `scripts/` 为准，归档实验不全是可安装版本。ZIP 位于仓库外的 `outputs/`，由作者自行发布 Releases。
 
-换座核心依据此前的单人、双人房主／客机、三人加入／退出、多车、行驶换座和坦克退出测试。四人已有离线检查，尚未完成四人实机验证。
+## 构建与验证
 
-0.4.1 的常驻控制器、普通版权限限制、菜单接口、13 种语言和两套键位隔离已有离线回归。本次 GameGuard 退出的确切检测原因未获确认；修订包仍需要一次单人短测，确认菜单切换、普通版限制与加强版功能。不要把离线回归视为反作弊实机兼容验证。
-
-反馈请提供游戏／模组版本、版本选择、按键策略、房主／客机、车型和操作步骤，以及 `%LOCALAPPDATA%\CowboyBingus\Helldivers2\Logs` 内相关日志：
-
-- `VehicleSeatSwitch.log`
-- `BingusSharedLoader.log`
-- `ModOptionsMenu.log`
-- `ModBindingsMenu.log`
-
-如再次出现 GameGuard 提示，记录提示文字、错误码与大致时间。无需发送密码、令牌或整个进程内存。
-
-## 源码与学习资料
-
-此仓库以原工作目录 `work` 为根目录。当前源码在 `seat_release_041`，旧版本和失败尝试保存在历史 `seat_*` 目录及 `STATE_*` 文档中。阅读 [`STATE_MENU_REVISION_20261007.md`](STATE_MENU_REVISION_20261007.md)、[`STATE_RELEASE_0.3.0_20261005.md`](STATE_RELEASE_0.3.0_20261005.md) 和 [`TASK_STATE.md`](TASK_STATE.md) 可了解当前状态及研究路径。历史文件不都代表当前可安装版本。
-
-为兼容现有测试路径，克隆到名为 `work` 的目录，在其父目录执行：
+保留现有测试的 `work/` 路径约定，将仓库克隆为名叫 `work` 的目录，在其父目录运行：
 
 ```text
-git clone https://github.com/CarrotLouis/Vehicle-Specified-Seat-Switch.git work
-python -X utf8 work/seat_release_041/make_locales.py
-python -X utf8 work/seat_release_041/build_native.py
-python -X utf8 work/seat_release_041/build.py
-python -X utf8 work/seat_release_041/validate.py
-python -X utf8 work/seat_release_041/build.py --package
+python -X utf8 work/scripts/make_locales.py
+python -X utf8 work/scripts/build_native.py
+python -X utf8 work/scripts/validate.py
+python -X utf8 work/scripts/build.py --package
+node work/scripts/test_arsenal.cjs outputs/Vehicle-Specified-Seat-Switch-0.4.2.zip
+python -X utf8 work/scripts/verify_artifact.py <Arsenal 检查打印的 result.json 路径>
 ```
 
-需要 Windows、Python 3、x64 MinGW GCC 和游戏的 LuaJIT 运行库。可用 `VSS_GCC`、`VSS_OBJDUMP`、`HD2_LUA51_DLL` 指定工具路径。完整研究回归还需要未提交的本地游戏采集与菜单源码；缺少这些资料时不会伪报完整通过。通过与源码摘要匹配的检查后，打包脚本将 ZIP 写入仓库外的 `outputs`。
+需要 Windows、Python 3 和 x64 MinGW GCC；通过 `VSS_GCC`、`VSS_OBJDUMP` 指定编译器，通过 `HD2_LUA51_DLL` 指定游戏的 `bin/lua51.dll`。测试在自己的进程里使用该库，不启动或连接游戏。
 
-第三方来源见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)。后续对话产生的新源码、测试和文档按项目约定同步至 GitHub；Releases 由作者管理。
+完整回归还需要 `local_data/reverse/` 内两份私有采集、`research/archive/menu_integration_research/` 内菜单源码，以及 Arsenal 检查使用的 `research/archive/packaging_research/arsenal_source/`。这些外部或游戏原始数据不放在公开仓库，缺少输入会明确失败。可单独通过 `scripts/run_lua.py` 运行不依赖采集的测试。
+
+打包只接受与当前源码一致的成功验证记录，拒绝覆盖已有 ZIP，不修改实际游戏或管理器配置。
+
+本次通过 **34 组离线回归**。此前核心已有单人、双人房主／客机、三人加入／退出、多车、行驶换座和坦克退出实测证据；四人实机尚未补齐。0.4.2 的新组合及性能屏蔽仍需单人短测。
+
+## 问题反馈与学习
+
+日志目录：`%LOCALAPPDATA%\CowboyBingus\Helldivers2\Logs`。提供 `VehicleSeatSwitch.log`，菜单或加载问题附相关 Loader、ModOptionsMenu、ModBindingsMenu 日志，并说明游戏／模组版本、模式、按键策略、车型、房主／客机及复现步骤。
+
+从[当前状态](docs/STATUS.md)、[架构说明](docs/ARCHITECTURE.md)和[已接受的 0.3.0 基线](docs/history/STATE_RELEASE_0.3.0_20261005.md)开始查看项目。[第三方来源](THIRD_PARTY_NOTICES.md)单独记录。作者尚未选择整个项目的许可证；公开可见不等于授权自由再分发全部原创代码。

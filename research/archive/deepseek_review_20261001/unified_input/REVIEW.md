@@ -1,0 +1,3 @@
+# Final DS report review
+20 directed routes/counts are correct; scopes agree broadly. Corrections: key162 is LCTRL, not RCTRL; counting mock keywords is not substitute coverage; tests use engine/RPC substitutes. README Chinese is valid UTF8 in primary (verified), DS encoding failure does not show source corruption. Owner is independent of coordinator/host; latest user confirms installer-host only. Complete() sets cooldown=now+10 explicitly. No static report finding explains actual lean gap: primary log review establishes dispatcher erases queue when native snapshot is briefly nil.
+User explicitly ended DeepSeek delegation on2026-10-01. Do not generate or send more DS tasks. Report preserved as raw and reviewed; no DS code merged.

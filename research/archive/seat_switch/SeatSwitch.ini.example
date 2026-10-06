@@ -1,0 +1,39 @@
+; Active file: %APPDATA%/Arrowhead/Helldivers2/VehicleSeatSwitch.ini
+; Full key list: KEYS_按键清单.txt in the ZIP. Keyboard, MOUSE1-MOUSE5 and NONE.
+; Chords: CTRL+1, SHIFT+Q, CTRL+MOUSE4. Press modifiers before the last key.
+; Extra modifiers do not match. Existing configuration is not overwritten.
+; F2/F3/F5 may trigger game overlays. Remap to avoid them.
+; Mode will be selected in Arsenal. Restart the game after changing keys.
+[M102]
+driver=F1
+front_passenger=F2
+rear_left=F3
+rear_right=F4
+gunner=F5
+
+[M103]
+driver=F1
+front_passenger=F2
+rear_left=F3
+rear_right=F4
+
+[M104]
+driver=F1
+front_passenger=F2
+flamer=F3
+
+[Bastion]
+driver=F1
+gunner=F2
+passenger_left=F3
+passenger_right=F4
+
+[Maelstrom]
+driver=F1
+gunner=F2
+passenger_left=F3
+passenger_right=F4
+
+[Tanker]
+driver=F1
+gunner=F2

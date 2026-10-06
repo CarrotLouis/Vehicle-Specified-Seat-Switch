@@ -1,0 +1,4 @@
+0.4.2
+修复非活动驾驶状态导致整体停用；菜单与换座异常隔离；补齐实际语言代码；数据方式恢复性能监控屏蔽；整理工程。MOP必需，MBM可选。
+Recovered from inactive-driver preflight without freezing menus; language aliases, data-only performance blocking, organized project. MOM required; MBM optional.
+换座核心沿用 0.3.0，新增功能实机短测待完成。 / Seat core retains 0.3.0; new features await a short in-game check.

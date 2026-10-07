@@ -4,9 +4,7 @@ Stay aboard and switch to a specified vacant seat. Occupied or reserved seats re
 Supports M-102 Gunner, M-103 Supply and M-104 Incinerator FRVs, TD-220 Bastion MK XVI, TD-110 Maelstrom and the mission tanker.
 Enhanced supports solo and multiplayer, host or guest. Only the player using the feature needs to install it.
 
-Revision: fixed the overly strict inactive-tank-driver preflight and isolated menu updates from gameplay errors. Rejected read-only seat preflights leave future requests usable. Unexpected Enhanced faults retain menus and guarded Normal controls. Fixed actual tc/pt/ms language codes.
-Performance blocking is back, off by default: four keyboard name-lookup data values only, numeric input IDs untouched, restored in native menus. No executable-instruction modification; live validation remains pending.
-The full Enhanced controller remains resident; Normal only limits allowed seat combinations. Changing variants does not replace controllers, patch game instructions or reinstall network interfaces. Live retest remains pending; no anti-cheat acceptance guarantee is established by offline checks.
+Select Normal or Enhanced in-game, use independent key configurations, and configure performance monitor shortcut blocking. Vacant-seat checks always apply.
 
 Install
 1. Exit the game. Enable Bingus Shared Loader v18+ (current v19 recommended).
@@ -15,7 +13,7 @@ Install
    https://github.com/CowboyBingus/ModBindingsMenu
 3. Import the complete ZIP into Arsenal, enable Install addon and deploy.
 4. Disable old seat diagnostics and other seat controllers. Wait about 30 seconds on the ship after launch.
-The unified 0.4.2 package selects Normal/Enhanced in-game; subsequent selection changes need no restart or redeployment.
+Select Normal/Enhanced in-game; selection changes need no restart or redeployment.
 ModOptionsMenu is required. Without optional ModBindingsMenu, INI is locked and the menu binding strategy option is absent.
 
 In-game options
@@ -58,15 +56,11 @@ Enhanced:
 
 Use and compatibility
 Stop firing/leaning and let the character settle before a new request. A teammate can keep driving.
-Retains moving-vehicle switching and tank-driver exit cleanup without changing vehicle speed or taking an occupied driver's seat.
+A teammate can keep driving. Occupied or reserved target seats remain unavailable.
 If a native menu key is also a firing/lean/movement control, release that conflicting action before a cross-group switch; dedicated keys are recommended.
 The menu addons enforce their own game-build support. Update the affected menu after a game update if it becomes inactive.
 The locally installed older ModOptionsMenu API only displays eight mod categories; update to the project's current paged version if this category is missing.
 No native input mapping is changed/saved by this addon. The release has no continuous diagnostic recording or whole-process scan.
-
-Validation
-34 offline regression groups passed, including the actual menu APIs, 13 languages, one resident controller with Normal restrictions, hot selection and independent sources. Live retest remains pending.
-Seat core retains 0.3.0: prior solo, two-player host/guest, three-player join/leave, multi-vehicle, moving switches and tank exits tested. Four-player live validation remains pending.
 
 Logs and reports
 %LOCALAPPDATA%\CowboyBingus\Helldivers2\Logs\VehicleSeatSwitch.log

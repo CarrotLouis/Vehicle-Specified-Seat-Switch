@@ -61,26 +61,36 @@ const remover=load('modules/modRemover.js');
 const listFiles=directory=>fs.readdirSync(directory,{recursive:true,withFileTypes:true}).filter(e=>e.isFile()).map(e=>path.relative(directory,path.join(e.parentPath||e.path,e.name)).replaceAll('\\','/')).sort();
 const digest=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 (async()=>{
- const release=path.resolve(process.argv[2]);const pack=new AdmZip(release);
- const manifest=JSON5.parse(pack.readAsText('manifest.json'));
- assert.equal(manifest.Options.length,1);assert.deepEqual(manifest.Options[0].Include,['Mod']);
- assert.equal(manifest.Options[0].SubOptions,undefined);
- await handler.processAndValidateZipsFromRenderer(library,[release]);
- assert.equal(records.modsList.length,1,'Arsenal import failed');
- const imported=records.modsList[0];assert.equal(imported.options.length,1);
- assert.equal(imported.options[0].enabled,true,'Unified addon must install by default');
- imported.enabled=true;records.modsLibrary=[imported];records.modsList=[imported];records.data.test.mods=[imported];
- const included=deployer.getValidFolders(imported);assert.deepEqual(Array.from(included),['Mod']);
- let mods=await deployer.deployMod(imported.uuid,[imported],data,temp,state,[imported]);
+ const releases=process.argv.slice(2).map(p=>path.resolve(p));assert(releases.length>0);
+ const release=releases[0];const packs=releases.map(p=>new AdmZip(p));const manifests=packs.map(p=>JSON5.parse(p.readAsText('manifest.json')));
+ assert.equal(new Set(manifests.map(m=>m.Guid)).size,releases.length,'Packages must have distinct GUIDs');
+ for(const manifest of manifests){
+  assert.equal(manifest.Options.length,1);assert.deepEqual(manifest.Options[0].Include,['Mod']);
+  assert.equal(manifest.Options[0].SubOptions,undefined);
+ }
+ await handler.processAndValidateZipsFromRenderer(library,releases);
+ assert.equal(records.modsList.length,releases.length,'Arsenal import failed');
+ let mods=records.modsList.slice();
+ for(const imported of mods){
+  assert.equal(imported.options.length,1);assert.equal(imported.options[0].enabled,true);
+  imported.enabled=true;
+  assert.deepEqual(Array.from(deployer.getValidFolders(imported)),['Mod']);
+ }
  records.modsLibrary=mods;records.modsList=mods;records.data.test.mods=mods;
- const expected=pack.getEntries().filter(e=>e.entryName.startsWith('Mod/')&&/\.patch_\d+(\.(stream|gpu_resources))?$/.test(e.entryName));
- const expectedHashes=expected.map(e=>digest(pack.readFile(e))).sort();
+ for(const uuid of mods.map(m=>m.uuid)){
+  mods=await deployer.deployMod(uuid,mods,data,temp,state,mods);
+  records.modsLibrary=mods;records.modsList=mods;records.data.test.mods=mods;
+ }
+ const expectedHashes=packs.flatMap(pack=>pack.getEntries()
+  .filter(e=>e.entryName.startsWith('Mod/')&&/\.patch_\d+(\.(stream|gpu_resources))?$/.test(e.entryName))
+  .map(e=>digest(pack.readFile(e)))).sort();
  const actualHashes=listFiles(data).map(n=>digest(fs.readFileSync(path.join(data,n)))).sort();
- assert.deepEqual(actualHashes,expectedHashes);assert.equal(actualHashes.length,3);
+ assert.deepEqual(actualHashes,expectedHashes);assert.equal(actualHashes.length,3*releases.length);
  assert.equal(listFiles(path.join(game,'bin')).length,0,'Source helper DLLs must not install into game bin');
  await remover.purgeMods();assert.equal(listFiles(game).length,0);
  const result={manager_version:JSON.parse(fs.readFileSync(path.join(source,'package.json'),'utf8')).version,
-  zip:release,sha256:digest(fs.readFileSync(release)),initial_default:'Unified addon; runtime Normal/INI/off',
-  installed_files:3,source_not_deployed:true,payload_hashes_preserved:true,purge_empty:true,live_profile_changed:false,game_launched:false};
+  zip:release,sha256:digest(fs.readFileSync(release)),packages:releases,coexistence_checked:releases.length>1,
+  initial_default:releases.length>1?'Seat addon plus independent probe':manifests[0].Name.includes('Probe')?'Read-only probe':'Unified addon; runtime Normal/INI/off',
+  installed_files:3*releases.length,source_not_deployed:true,payload_hashes_preserved:true,purge_empty:true,live_profile_changed:false,game_launched:false};
  fs.writeFileSync(path.join(fixture,'result.json'),JSON.stringify(result,null,2));console.log(JSON.stringify({result:path.join(fixture,'result.json'),...result},null,2));
 })().catch(error=>{fs.writeFileSync(path.join(fixture,'backend-log.json'),JSON.stringify(logs,null,2));console.error(error);process.exitCode=1;});

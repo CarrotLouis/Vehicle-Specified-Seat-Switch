@@ -25,3 +25,7 @@ The earlier `performance.lua`/`code_byte.lua` executable-instruction approach re
 ## Building and historical records
 
 Current build and checks use `scripts/`; output goes to ignored `build/` and the sibling `outputs/`. `research/archive/` retains original experiments and accepted baselines; `docs/history/` retains their dated notes. Those notes preserve old paths so their timeline is not silently rewritten. Downloaded tools/dependencies and private captures stay in ignored `vendor/`/`local_data/`, and are never shipped or pushed.
+
+## Current read-only menu probe
+
+menu_probe.lua/menu_probe_entry.lua are a separate one-shot diagnostic, not part of the formal runtime. It has an independent resource/GUID and delegates to the previous update/shutdown callbacks. It compares the profiler registry with the Lua keyboard device and records only bounded keyboard metadata and this mod's native action records. It declares read/query APIs only. See STATUS for the outstanding performance-filter evidence.

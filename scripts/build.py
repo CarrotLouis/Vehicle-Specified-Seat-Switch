@@ -63,11 +63,10 @@ assert checks['bundles']==bundle_hashes and checks['native_sha256']==hashlib.sha
 from docs import manifest,write_docs
 write_docs()
 files['manifest.json']=json.dumps(manifest,ensure_ascii=False,indent=2).encode()
-for name in ['README_中文.txt','README_English.txt','CHANGELOG_更新记录.txt','KEYS_按键清单.txt','KEYS_English.txt','VehicleSeatSwitch.ini.example']:
+for name in ['README_中文.txt','README_English.txt','KEYS_按键清单.txt','KEYS_English.txt','VehicleSeatSwitch.ini.example']:
     files[name]=((R/'examples'/name)if name.endswith('.example')else D/name).read_bytes()
 files['Source/entry.lua']=(S/'entry.lua').read_bytes()
 files['Source/solo_native.lua']=(S/'solo_native.lua').read_bytes()
-files['Source/baseline.txt']=b'Based on preserved 0.4.1 source; see research/archive/seat_release_041.\n'
 files['Source/assembly.json']=(B/'assembly.json').read_bytes()
 for relative in used:
     if relative.startswith('src/'):files['Source/modules/'+Path(relative).name]=(R/relative).read_bytes()

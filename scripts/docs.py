@@ -5,15 +5,14 @@ manifest={'Version':1,'Guid':'caab3d07-e0b5-4998-98c9-92888a7e0f88',
  'Name':'Vehicle Specified Seat Switch / 载具指定座位切换',
  'Description':'0.4.2：始终留在车内，用快捷键切换到指定空座。支持三辆 FRV、Bastion、Maelstrom 和任务油罐车。接入 ModOptionsMenu，游戏内热切换普通版／加强版、INI／菜单按键。普通版、INI为首次默认值。加强版支持单人及多人，仅使用者需要安装。\n\n0.4.2: stay aboard and switch to specified vacant seats. Supports three FRVs, Bastion, Maelstrom and the mission tanker. ModOptionsMenu selects Normal/Enhanced, independent INI/menu bindings in-game. Initial defaults: Normal and INI. Enhanced supports solo/multiplayer; only the user of the feature needs to install it.',
  'Options':[{'Name':'安装模组 / Install addon','Include':['Mod'],
- 'Description':'统一安装包，版本在游戏内选择，不再通过 Arsenal 切换载具换座版本。普通版保留原有座位分组；加强版允许跨区换座。需要 Bingus Shared Loader；需要 ModOptionsMenu，ModBindingsMenu 为可选依赖。三人核心路径已实测，四人实机和本次菜单新增功能仍待实测。\n\nUnified package: choose the variant in-game. Normal retains native seat groups; Enhanced allows cross-group switching. Requires Bingus Shared Loader; ModOptionsMenu is required; ModBindingsMenu is optional. Three-player core paths tested; four-player live checks and the new menu features await in-game validation.'}]}
+ 'Description':'统一安装包，在游戏内选择普通版或加强版。普通版保留原有座位分组；加强版允许跨区换座。需要 Bingus Shared Loader；需要 ModOptionsMenu，ModBindingsMenu 为可选依赖。\n\nUnified package: choose the variant in-game. Normal retains native seat groups; Enhanced allows cross-group switching. Requires Bingus Shared Loader; ModOptionsMenu is required; ModBindingsMenu is optional. '}]}
 zh=r'''Vehicle Specified Seat Switch 0.4.2
 
 留在载具内，按快捷键切换到指定空座。已被队友占用或预留的座位不可切换。
 支持 M-102 Gunner FRV、M-103 Supply FRV、M-104 Incinerator FRV、TD-220 Bastion MK XVI、TD-110 Maelstrom 和特殊任务油罐车。
 加强版支持单人、多人，房主或客机均可；仅使用功能的人需要安装，其他队友无需安装。
 
-本版修订：修复 Maelstrom 驾驶位退出的过严检查，换座预检拒绝不再停用全部功能。菜单更新独立于换座异常；异常后仍可切换按键策略并使用经过检查的普通版功能。补齐 tc、pt、ms 游戏语言代码。
-完整加强版常驻；普通版仅限制允许的座位组合。切版本不更换控制器，不改写游戏指令，也不重装联机接口。重新提供默认关闭的性能监控屏蔽：只改变四个按键名查询的数据值，保留数字键码，打开菜单时恢复，不修改游戏指令。需要实机验证该替代方式。
+可在游戏内选择普通版或加强版、切换独立的按键配置，并设置性能监控快捷键屏蔽。目标空位检查始终生效。
 
 安装
 1. 完全退出游戏，启用 Bingus Shared Loader v18 或以上（建议当前 v19）。
@@ -22,7 +21,7 @@ zh=r'''Vehicle Specified Seat Switch 0.4.2
    https://github.com/CowboyBingus/ModBindingsMenu
 3. 将本 ZIP 整包导入 Arsenal，启用“安装模组 / Install addon”，重新部署。
 4. 禁用旧换座诊断包及其他换座控制模组。启动后在舰船上等约 30 秒完成初始化。
-0.4.2 改为统一安装包：普通版／加强版在游戏内选择，后续改选无需退出或重新部署。
+普通版／加强版在游戏内选择，后续改选无需退出或重新部署。
 ModOptionsMenu 为本版必需依赖。未安装 ModBindingsMenu 时，按键策略固定为 INI，不显示菜单键位切换选项。
 
 游戏内选项
@@ -65,15 +64,11 @@ INI 默认键位／座位范围
 
 使用与兼容
 换座前停止射击、探头，待角色坐稳再按一次。同车队友可以继续驾驶。
-保持此前的行驶换座与坦克驾驶退出清理，不改写车速，不抢占队友驾驶位。
+同车队友可继续驾驶；目标座位被占用或预留时无法切换。
 原生菜单键若也绑定为射击／探头／移动，可能要释放该操作后才能完成跨区换座，建议选用专用按键。
 菜单模组本身按游戏版本检查兼容性；遇游戏更新后菜单不可用，请查看并更新对应菜单。
 当前本地 ModOptionsMenu 的旧接口版本最多展示 8 个模组类别；如本模组未显示，请更新至项目当前支持分页的版本。
 不修改／保存用户的游戏原生按键映射。发行包不包含持续采集或全进程扫描。
-
-验证范围
-本次修订通过 34 组离线回归，包括真实菜单注册接口、13 种语言、同一常驻控制器的普通版权限限制、热切换和来源隔离。尚未实机复测。
-换座核心沿用 0.3.0：此前单人、双人房主／客机、三人加入／退出、多车、行驶换座与坦克退出已测试。四人实机验证尚未补齐。
 
 日志与反馈
 %LOCALAPPDATA%\CowboyBingus\Helldivers2\Logs\VehicleSeatSwitch.log
@@ -87,9 +82,7 @@ Stay aboard and switch to a specified vacant seat. Occupied or reserved seats re
 Supports M-102 Gunner, M-103 Supply and M-104 Incinerator FRVs, TD-220 Bastion MK XVI, TD-110 Maelstrom and the mission tanker.
 Enhanced supports solo and multiplayer, host or guest. Only the player using the feature needs to install it.
 
-Revision: fixed the overly strict inactive-tank-driver preflight and isolated menu updates from gameplay errors. Rejected read-only seat preflights leave future requests usable. Unexpected Enhanced faults retain menus and guarded Normal controls. Fixed actual tc/pt/ms language codes.
-Performance blocking is back, off by default: four keyboard name-lookup data values only, numeric input IDs untouched, restored in native menus. No executable-instruction modification; live validation remains pending.
-The full Enhanced controller remains resident; Normal only limits allowed seat combinations. Changing variants does not replace controllers, patch game instructions or reinstall network interfaces. Live retest remains pending; no anti-cheat acceptance guarantee is established by offline checks.
+Select Normal or Enhanced in-game, use independent key configurations, and configure performance monitor shortcut blocking. Vacant-seat checks always apply.
 
 Install
 1. Exit the game. Enable Bingus Shared Loader v18+ (current v19 recommended).
@@ -98,7 +91,7 @@ Install
    https://github.com/CowboyBingus/ModBindingsMenu
 3. Import the complete ZIP into Arsenal, enable Install addon and deploy.
 4. Disable old seat diagnostics and other seat controllers. Wait about 30 seconds on the ship after launch.
-The unified 0.4.2 package selects Normal/Enhanced in-game; subsequent selection changes need no restart or redeployment.
+Select Normal/Enhanced in-game; selection changes need no restart or redeployment.
 ModOptionsMenu is required. Without optional ModBindingsMenu, INI is locked and the menu binding strategy option is absent.
 
 In-game options
@@ -141,15 +134,11 @@ Enhanced:
 
 Use and compatibility
 Stop firing/leaning and let the character settle before a new request. A teammate can keep driving.
-Retains moving-vehicle switching and tank-driver exit cleanup without changing vehicle speed or taking an occupied driver's seat.
+A teammate can keep driving. Occupied or reserved target seats remain unavailable.
 If a native menu key is also a firing/lean/movement control, release that conflicting action before a cross-group switch; dedicated keys are recommended.
 The menu addons enforce their own game-build support. Update the affected menu after a game update if it becomes inactive.
 The locally installed older ModOptionsMenu API only displays eight mod categories; update to the project's current paged version if this category is missing.
 No native input mapping is changed/saved by this addon. The release has no continuous diagnostic recording or whole-process scan.
-
-Validation
-34 offline regression groups passed, including the actual menu APIs, 13 languages, one resident controller with Normal restrictions, hot selection and independent sources. Live retest remains pending.
-Seat core retains 0.3.0: prior solo, two-player host/guest, three-player join/leave, multi-vehicle, moving switches and tank exits tested. Four-player live validation remains pending.
 
 Logs and reports
 %LOCALAPPDATA%\CowboyBingus\Helldivers2\Logs\VehicleSeatSwitch.log
@@ -160,8 +149,6 @@ Do not send GitHub credentials or a whole game memory dump.
 def write_docs():
     for n,text in [('README_中文.txt',zh),('README_English.txt',en)]:
         (R/n).write_text(text,encoding='utf-8',newline='\n')
-    changes='0.4.2\n修复非活动驾驶状态导致整体停用；菜单与换座异常隔离；补齐实际语言代码；数据方式恢复性能监控屏蔽；整理工程。MOP必需，MBM可选。\nRecovered from inactive-driver preflight without freezing menus; language aliases, data-only performance blocking, organized project. MOM required; MBM optional.\n换座核心沿用 0.3.0，新增功能实机短测待完成。 / Seat core retains 0.3.0; new features await a short in-game check.\n'
-    (R/'CHANGELOG_更新记录.txt').write_text(changes,encoding='utf-8',newline='\n')
     for n in ['KEYS_按键清单.txt','KEYS_English.txt']:
         text=(R/n).read_text(encoding='utf-8').replace('0.3.0','0.4.2').replace('0.4.1','0.4.2')
         footer='\n此清单仅适用于 VehicleSeatSwitch.ini；ModBindingsMenu 按游戏原生菜单允许的范围设置。\nThis list is for VehicleSeatSwitch.ini; ModBindingsMenu uses the native menu\'s supported range.\n'

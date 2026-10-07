@@ -10,14 +10,9 @@ Import the complete ZIP into Arsenal and enable its single install option. Choos
 
 INI keys are at `%APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini`. Native menu actions initially have no bindings: assign them in the MODS binding page. The two configurations never overwrite each other. Player instructions: [English](docs/README_English.txt), [Chinese](docs/README_中文.txt), [accepted INI keys](docs/KEYS_English.txt).
 
-## This revision
+## Controls
 
-- Fixes an inactive Maelstrom-driver preflight that stopped the whole addon. Read-only refusals leave later requests usable. Unexpected Enhanced errors pause that route while keeping menus and guarded Normal controls available.
-- Refreshes the bindings-page source notice directly from the applied option.
-- Resolves the game's `tc`, `pt`, `ms` codes to Traditional Chinese, Brazilian Portuguese and Latin American Spanish. Thirteen translation tables include all supported languages and English regional variants.
-- Restores optional F2–F5 monitor blocking using keyboard lookup **data**, preserving numeric action IDs and restoring original data in native menus. This replacement still needs an in-game check.
-
-The user confirmed 0.4.1 mode switching no longer triggered GameGuard. The earlier 0.4.0 forced exit followed enabling its instruction-based monitor patch; that approach remains withdrawn. Offline checks do not establish live compatibility of 0.4.2.
+Use the MODS options page for Normal/Enhanced, key strategy and performance shortcut blocking (default Off). Translated labels follow the game's text language. Native menu bindings currently start unbound under ModBindingsMenu's public API: assign F1-F5 with Press, or choose your own keys.
 
 ## Project layout
 
@@ -57,7 +52,7 @@ Packaging requires a digest record from a successful matching validation run and
 
 ## Evidence and reporting
 
-The retained seat core follows accepted solo, two-player host/guest, three-player, multi-vehicle and moving-vehicle tests. Four-player live confirmation remains outstanding. Revision 0.4.2 passes **34 offline groups**, including actual menu registration APIs, translated labels, dependencies, fault recovery and captured native contracts. Its new composition and data-based monitor filter await a short solo live check.
+Current regression and live-research evidence is recorded in [STATUS](docs/STATUS.md), separate from player instructions. Full validation uses explicitly declared engine/network doubles where stated and does not run a live game.
 
 Send `VehicleSeatSwitch.log`, relevant loader/menu logs, game/mod versions, mode, key source, host/guest, vehicle and reproduction steps. Logs are under `%LOCALAPPDATA%\CowboyBingus\Helldivers2\Logs`.
 

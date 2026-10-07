@@ -2,6 +2,10 @@ local T=dofile('work/src/bingus_text.lua')
 local wrapper=dofile('work/src/i18n.lua')(T)
 local locales=dofile('work/src/menu_locales.lua')
 local tr=wrapper.new(locales.en,locales.bundled)
+for _,locale in pairs(locales.bundled)do
+ assert(locale.strings.perf_description:find('F2-F5',1,true),'use the ASCII range glyph supported by game fonts')
+ assert(not locale.strings.perf_description:find('\226\128\147',1,true))
+end
 for _,pair in ipairs({{'tc','zh-Hant'},{'pt','pt-BR'},{'ms','es-419'},{'us','en'},{'uk','en'},{'gb','en'},
  {'cn','zh-Hans'},{'jp','ja'},{'kr','ko'},{'de','de'},{'fr','fr'},{'it','it'},{'es','es'},{'pl','pl'},{'ru','ru'}})do
  local raw,expected=pair[1],pair[2]

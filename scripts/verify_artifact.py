@@ -25,7 +25,7 @@ with zipfile.ZipFile(zpath)as z:
     assert hashlib.sha256(runtime).hexdigest()==checks['bundles']['full']==package['bundles']['full']
     assert z.read('Source/validation.json')==(B/'tests-passed.json').read_bytes()
     assert z.read('Source/assembly.json')==(B/'assembly.json').read_bytes()
-    for n in ['README_中文.txt','README_English.txt','CHANGELOG_更新记录.txt','KEYS_按键清单.txt','KEYS_English.txt']:
+    for n in ['README_中文.txt','README_English.txt','KEYS_按键清单.txt','KEYS_English.txt']:
         assert z.read(n)==(D/n).read_bytes()
     assert z.read('VehicleSeatSwitch.ini.example')==(R/'examples/VehicleSeatSwitch.ini.example').read_bytes()
     assert z.read('Source/entry.lua')==(R/'src/entry.lua').read_bytes()

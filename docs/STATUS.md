@@ -1,34 +1,38 @@
-# 0.4.2 checkpoint — 2026-10-07
+# Menu/performance checkpoint — 2026-10-07
 
-## Scope
+## Current work
 
-One unified Arsenal install option. ModOptionsMenu required; ModBindingsMenu optional. Missing MBM means INI is forced and no strategy choice is offered, regardless of a saved menu selection. First use: Normal / INI / performance blocking OFF. The user withdrew the proposed Full/Normal/Enhanced plus checkbox installer layout; do not resume it.
+Latest installed gameplay package remains 0.4.2. Player reported performance blocking ineffective. No replacement formal ZIP has been created this turn: dictionary evidence is needed before changing game-memory writes. Public installation scope remains one unified package, required ModOptionsMenu, optional ModBindingsMenu, forced INI without MBM.
 
-## Observed failure
+Player-facing formal packaging now describes current functions only. Prior-version narratives, offline counts and three/four-player validation caveats were removed from manifest/player READMEs. The author writes the release changelog and Known Issues. The generated changelog was preserved under history and excluded from future ZIPs; baseline narratives are no longer exported in them. Accurate engineering evidence stays in STATUS/history.
 
-User confirmed 0.4.1 variant changes no longer trigger GameGuard but later all switching and source changes stopped. Latest frozen logs are private at `local_data/menu-failure-20261007/`.
+All locale performance descriptions now use ASCII F2-F5 rather than the unsupported en dash. Existing independent settings and native bindings are preserved. ModBindingsMenu's current installed/upstream public API has no default-key setter; automatic actions start unbound. No private default writer or input.config replacement was introduced. The five menu actions can be set manually to Press F1-F5.
 
-The decisive line is 2026-10-07 05:20:24: Maelstrom driver → gunner, followed by `steer_reset_driver_not_active`, `state=disabled_after_error` and transport stop. Menu updates were part of that stopped loop. This accounts for the frozen INI notice and ineffective later selections. Logs also show `tc`, `pt`, `ms` resolving zero translated strings.
+## Live evidence and unresolved issue
 
-## Revision
+Frozen private evidence: local_data/menu-perf-failure-20261007/ (four logs and menu configuration snapshots with hashes).
 
-- Accept valid inactive owned tank-driver starting state; preserve native exit and neutral-steering postchecks.
-- Catch read-only direct-switch preparation refusal without disabling later requests. Keep post-mutation errors fail closed.
-- Update menu/source labels independently of gameplay errors. Retain guarded Normal controls after an unexpected Enhanced fault; do not silently restart Enhanced.
-- Alias tc/pt/ms locally; leave upstream/shared translation data untouched.
-- Reintroduce default-OFF performance blocking with four writable keyboard lookup data fields, native menu restoration and a fresh saved ID. No executable opcode writes. Unsupported layouts refuse only the feature.
-- Organize current modules into src/native/tests/scripts/docs/examples. Move 263 root items into research archives, history, private data or vendor folders. Original baseline contents and published ZIPs are preserved. Root contains six project files.
+2026-10-07 14:07:07–14:09:24: multiple performance_data_unavailable keyboard_dictionary_chain refusals. They occur while locating the dictionary, before any write. Other logs show M102 and Maelstrom switches completing and Normal/Enhanced plus INI/menu choices applying; they do not establish remote rendering outcomes.
 
-## Evidence and next check
+The error log lacks the divisor, count, actual next indices and the lookup-device identity. The native leaf reader bounds its initial modulo by +0x94 but does not bound later chain indices by that divisor. Whether the actual failure is an overflow/collision area, another device or metadata interpretation cannot be established from this log. Do not weaken write checks speculatively.
 
-34 offline groups cover retained reservations/room routes, own-process FFI, captured native contracts on builds 25327279/25480438, actual installed/upstream menu registration, locales, missing/delayed dependencies, read-only refusal, runtime-error isolation, and performance data rollback/restoration. Engine/network/physics and numeric native-action consumers remain explicit doubles where stated.
+## One-shot diagnostic
 
-The seat core has prior accepted solo, host/guest two-player, three-player, multiple-vehicle and moving-vehicle evidence. Four-player live confirmation remains outstanding. User's 0.4.1 retest is live evidence for its mode switching; 0.4.2 is not yet live-tested.
+outputs/Vehicle-Seat-Menu-Input-Probe-0.1.1.zip
+SHA-256: 7988dd7824387cc9c07ce8ba77af454fd7485ac56827f266fd7c0737fd921955
+Size: 9020 bytes.
 
-Next useful check is one solo session: fully exit/deploy 0.4.2, wait on ship, alternate Normal/Enhanced and INI/menu sources, repeat Maelstrom driver → gunner → passenger → driver, and verify the applied source hint. Test performance blocking ON/OFF and F2–F5 under each strategy, including rebinding in the menu. It may report `performance_data_unavailable`; send that log rather than assuming it worked. No multiplayer gathering or new raw capture is currently required.
+Independent GUID d84b964e-a9c6-48d2-a781-1642057fe243, resource mods/vehicle_seat_tools/menu_input_probe, tag VehicleSeatMenuInputProbe. It does not use the old gameplay-conflicting VehicleSeatNetworkDiagnostic tag/resource.
 
-Packaging and isolated Arsenal checks are recorded in ignored `build/`. The public repo contains source/tests/docs only; user manages Releases. Git sync is authorized once when this conversation's changes are finished.
+The core reads public F1-F5 IDs, the native profiler's small device registry, the Lua keyboard closure, its dictionary header and bounded candidate/chains (at most 4096 slots once), plus only this addon's assigned menu action records when ready. No game-memory writes, executable changes, input injection, seat changes, network sends or process-wide scan. It stops after one capture. Captures retry only while the keyboard is not loaded; the first attempt is after 15 seconds, max startup wait 60 seconds.
 
-Final ZIP: `outputs/Vehicle-Specified-Seat-Switch-0.4.2.zip`, 666795 bytes, SHA-256 `29166e685bf8ea650ca6d4c5549691c62a28e5359dc0a0367723e8742c021116`. Isolated real Arsenal 0.36.2 imported, deployed exactly three patch files with unchanged hashes, and purged its fixture successfully. Source/helper exports were not installed into the game bin. Exact package/source/validation/CRC/default checks passed. No live game launch or profile edit occurred.
+Log: %LOCALAPPDATA%/CowboyBingus/Helldivers2/Logs/VehicleSeatMenuInputProbe.log
+User procedure: keep current seat addon and dependencies, import/enable probe, deploy and start; wait on ship 30 seconds, exit and report completion; disable probe after collection. No mission or multiplayer needed. Stop data-dependent performance work until this evidence arrives, then implement/validate the actual lookup correction and create the next formal package.
 
-Reorganization audit found all 3601 original tracked files at their mapped local destinations. 3594 moved files match the committed contents after ordinary newline normalization; the remaining moved historical test differs only by pre-existing blank-line formatting. Archived generated fixtures remain local but are excluded from new source tracking. A staged-file audit found no credentials, raw captures/logs, vendor trees or build/output artifacts.
+## Offline verification
+
+Retained 34 gameplay/menu/captured-contract regression groups pass against the current composition. The separate diagnostic test covers bounded reads, candidate visibility outside the initial divisor, RIP-relative registry resolution, oversized registry refusal and no game-memory writes. Packaging statically rejects write/protection/allocation/input-injection imports in the probe.
+
+Real Arsenal 0.36.2 isolated simultaneous import/deploy/purge with 0.4.2 passes: two distinct GUIDs, six exact payload files, unchanged hashes, sources/helpers not deployed, fixture purged. No actual game/profile was modified or launched. Build records remain ignored under build/.
+
+Earlier accepted seat evidence and unresolved four-player live confirmation remain documented in history; do not move that developer qualification into the player introduction.

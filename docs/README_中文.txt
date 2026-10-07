@@ -1,4 +1,4 @@
-Vehicle Specified Seat Switch 0.4.2
+Vehicle Specified Seat Switch 0.4.3
 
 留在载具内，按快捷键切换到指定空座。已被队友占用或预留的座位不可切换。
 支持 M-102 Gunner FRV、M-103 Supply FRV、M-104 Incinerator FRV、TD-220 Bastion MK XVI、TD-110 Maelstrom 和特殊任务油罐车。

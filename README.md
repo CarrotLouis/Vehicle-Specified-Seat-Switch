@@ -4,7 +4,7 @@ English | [简体中文](README.zh-CN.md)
 
 Helldivers 2 addon for switching directly to specified vacant vehicle seats while staying aboard. Supports M-102, M-103 and M-104 FRVs, TD-220 Bastion MK XVI, TD-110 Maelstrom and the mission tanker. Enhanced works for the installing player with unmodded teammates, as host or guest. Occupied and reserved seats remain protected.
 
-Current revision: **0.4.2**. [ModOptionsMenu](https://github.com/CowboyBingus/ModOptionsMenu) and [Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader) are required. [ModBindingsMenu](https://github.com/CowboyBingus/ModBindingsMenu) is optional. Without it, only INI is available; a saved menu-source selection cannot enable an absent dependency.
+Current revision: **0.4.3**. [ModOptionsMenu](https://github.com/CowboyBingus/ModOptionsMenu) and [Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader) are required. [ModBindingsMenu](https://github.com/CowboyBingus/ModBindingsMenu) is optional. Without it, only INI is available; a saved menu-source selection cannot enable an absent dependency.
 
 Import the complete ZIP into Arsenal and enable its single install option. Choose Normal/Enhanced in the game's MODS options page. First-use defaults: **Normal, INI, performance blocking Off**. One resident Enhanced controller implements both modes; Normal restricts allowed seat combinations. Changes wait for the current switch to finish.
 
@@ -40,7 +40,7 @@ python -X utf8 work/scripts/make_locales.py
 python -X utf8 work/scripts/build_native.py
 python -X utf8 work/scripts/validate.py
 python -X utf8 work/scripts/build.py --package
-node work/scripts/test_arsenal.cjs outputs/Vehicle-Specified-Seat-Switch-0.4.2.zip
+node work/scripts/test_arsenal.cjs outputs/Vehicle-Specified-Seat-Switch-0.4.3.zip
 python -X utf8 work/scripts/verify_artifact.py <result.json printed by the Arsenal check>
 ```
 

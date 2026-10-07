@@ -4,7 +4,7 @@ import hashlib,json,struct,subprocess,sys,zipfile
 R=Path(__file__).resolve().parents[1];W=R;P=R.parent;S=R/'src';B=R/'build';N=R/'native';D=R/'docs';B.mkdir(exist_ok=True)
 sys.path.insert(0,str(W))
 from archive_format import make_archive,resource_hash,ARCHIVE
-VERSION='0.4.2';NAME='mods/vehicle_seat_tools/vehicle_seat_switch'
+VERSION='0.4.3';NAME='mods/vehicle_seat_tools/vehicle_seat_switch'
 files={};bundle_hashes={};used={}
 def compose(mode):
     source=f'-- HD2-Addon: {NAME}\nlocal MODE="{mode}"\n'

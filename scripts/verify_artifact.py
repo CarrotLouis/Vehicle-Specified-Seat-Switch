@@ -3,7 +3,7 @@ from pathlib import Path
 import hashlib,json,struct,sys,zipfile
 from archive_format import resource_hash,ARCHIVE,TYPE
 R=Path(__file__).resolve().parents[1];B=R/'build';D=R/'docs'
-zpath=R.parent/'outputs/Vehicle-Specified-Seat-Switch-0.4.2.zip'
+zpath=R.parent/'outputs/Vehicle-Specified-Seat-Switch-0.4.3.zip'
 package=json.loads((B/'package.json').read_text())
 checks=json.loads((B/'tests-passed.json').read_text());assert len(checks['checks'])==34
 assembly=json.loads((B/'assembly.json').read_text())
@@ -49,6 +49,12 @@ with zipfile.ZipFile(zpath)as z:
     forbidden={'performance.lua','code_byte.lua','performance_spec.lua'}
     assert not any(Path(n).name in forbidden for n in z.namelist())
     assert not any(n.endswith('.log')or n.startswith(('Normal/','Enhanced/','Performance/'))for n in z.namelist())
+    assert not any('CHANGELOG'in n or n=='Source/baseline.txt'for n in z.namelist())
+    introductions=z.read('README_中文.txt').decode()+z.read('README_English.txt').decode()+json.dumps(manifest,ensure_ascii=False)
+    for historical in ['本版修订','Revision:','验证范围','Validation\n','四人','Four-player','Three-player','0.4.0','0.4.1','0.4.2','34 组']:
+        assert historical not in introductions,historical
+    for n in ['menu_probe.lua','menu_probe_entry.lua']:
+        assert 'Source/modules/'+n not in z.namelist(),'one-shot diagnostics do not ship in the formal runtime'
 manager=json.loads(Path(sys.argv[1]).read_text())
 sha=hashlib.sha256(zpath.read_bytes()).hexdigest()
 assert sha==manager['sha256']==package['sha256']

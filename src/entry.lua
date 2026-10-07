@@ -1,7 +1,7 @@
 -- One addon, one physical key poller, selectable native/solo/network routes.
 local tag='VehicleSeatSwitch'
 if rawget(_G,tag) then return end
-local state={version='0.4.2',mode='normal',status='starting'}
+local state={version='0.4.3',mode='normal',status='starting'}
 rawset(_G,tag,state)
 local loader=rawget(_G,'CowboyBingusModLoader')
 local previous,previous_shutdown=update,shutdown

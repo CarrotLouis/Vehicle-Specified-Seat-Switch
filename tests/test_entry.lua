@@ -165,7 +165,7 @@ assert(bundle:sub(-#source)==source)
 local bridge='\n';for _,name in ipairs(substitutions)do bridge=bridge..name..'=__fixture.'..name..'\n'end
 env.__fixture=env;enhanced=true;mission=false;count=1;options[prefix..'mode']=1
 restart(bundle:sub(1,#bundle-#source)..bridge..source);tick(610)
-assert(VehicleSeatSwitch.version=='0.4.2'and VehicleSeatSwitch.transport_ready,tostring(VehicleSeatSwitch.error))
+assert(VehicleSeatSwitch.version=='0.4.3'and VehicleSeatSwitch.transport_ready,tostring(VehicleSeatSwitch.error))
 assert(env.shutdown()=='shutdown_forwarded')
 print('PASS exact unified archive prefix with real menu/input modules and declared engine doubles')
 

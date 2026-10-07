@@ -1,4 +1,4 @@
-Vehicle Specified Seat Switch 0.4.2 — Keys and combinations
+Vehicle Specified Seat Switch 0.4.3 — Keys and combinations
 
 CONFIGURATION
 %APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini

@@ -28,26 +28,19 @@ function M.new(api,spec,log,keyboard_provider)
   local table_ptr=assert(api.pointer(h),'keyboard_dictionary_pointer')
   local count,cap=u32(h,16),u32(h,20)
   assert(count>=4 and count<=512 and cap>=count and cap<=4096,'keyboard_dictionary_bounds')
-  local p=api.describe(table_ptr)
-  assert(p and p.readable and p.writable and not p.executable and p.region_remaining,'keyboard_dictionary_not_writable_data')
-  -- +94 is the primary modulo divisor, not the storage limit. Native lookup
-  -- chains may continue into collision rows after it (observed F3: 62 -> 326,
-  -- divisor 319). Follow only linked rows; bound them by live count + divisor,
-  -- mapped readable storage and the existing 64-step cycle/budget guard.
-  local slots=math.min(cap+count,math.floor(p.region_remaining/12))
-  assert(slots>=cap,'keyboard_dictionary_storage_bounds')
+  local p=api.describe(table_ptr);assert(p and p.writable and not p.executable,'keyboard_dictionary_not_writable_data')
   local found={}
   for i,hash in ipairs(hashes)do
    local index=hash%cap;local seen={}
    for n=1,64 do
-    assert(index<slots and not seen[index],'keyboard_dictionary_chain');seen[index]=true
+    assert(index<cap and not seen[index],'keyboard_dictionary_chain');seen[index]=true
     local at=table_ptr+index*12;local row=assert(api.read(at,12),'keyboard_row_unreadable')
     if u32(row,0)==hash then
      local region=api.describe(at)
      assert(region and region.writable and not region.executable and region.region_remaining>=12,'keyboard_row_not_writable_data')
      local code=u32(row,4);assert(code==0x70+i,'keyboard_numeric_id_changed')
      assert(k.button_id('f'..(i+1))==code,'keyboard_public_id_disagrees')
-     found[i]={address=at+4,before=row:sub(5,8),row_address=at,row=row};break
+     found[i]={address=at+4,before=row:sub(5,8),row_address=at,hash=row:sub(1,4)};break
     end
     index=u32(row,8);assert(index~=0x7fffffff and index~=0xfffffffe,'keyboard_name_missing')
    end
@@ -61,11 +54,9 @@ function M.new(api,spec,log,keyboard_provider)
   local failures=0
   for i=#self.saved,1,-1 do local r=self.saved[i]
    local h=api.read(device+0x80,24)
-   local row=api.read(r.row_address,12)
-   local filtered=r.row:sub(1,4)..invalid..r.row:sub(9,12)
-   if h~=header then failures=failures+1
-   elseif row==filtered and api.replace(r.address,invalid,r.before)then table.remove(self.saved,i)
-   elseif row==r.row then table.remove(self.saved,i)
+   if h~=header or api.read(r.row_address,4)~=r.hash then failures=failures+1
+   elseif api.read(r.address,4)==invalid and api.replace(r.address,invalid,r.before)then table.remove(self.saved,i)
+   elseif api.read(r.address,4)==r.before then table.remove(self.saved,i)
    else failures=failures+1 end
   end
   self.enabled=#self.saved>0
@@ -91,9 +82,8 @@ function M.new(api,spec,log,keyboard_provider)
   local ok,found=pcall(locate)
   if not ok then self.status='unavailable';log('performance_data_unavailable '..tostring(found));return end
   for _,r in ipairs(found)do
-   if api.read(device+0x80,24)~=header or api.read(r.row_address,12)~=r.row or not api.replace(r.address,r.before,invalid)then
-    if restore()then self.status='unavailable'end
-    log('performance_data_enable_refused');return
+   if not api.replace(r.address,r.before,invalid)then
+    restore();self.status='unavailable';log('performance_data_enable_refused');return
    end
    self.saved[#self.saved+1]=r
   end

@@ -1,38 +1,37 @@
-# Menu/performance checkpoint — 2026-10-07
+# 0.4.3 checkpoint — 2026-10-07
 
-## Current work
+## Outcome
 
-Latest installed gameplay package remains 0.4.2. Player reported performance blocking ineffective. No replacement formal ZIP has been created this turn: dictionary evidence is needed before changing game-memory writes. Public installation scope remains one unified package, required ModOptionsMenu, optional ModBindingsMenu, forced INI without MBM.
+The one-shot keyboard capture is usable and establishes the failure of the performance filter. Revision 0.4.3 supports the observed collision rows without relaxing identity, code or write guards. A formal ZIP has been built and checked offline; exact live filter behavior still needs a short solo confirmation.
 
-Player-facing formal packaging now describes current functions only. Prior-version narratives, offline counts and three/four-player validation caveats were removed from manifest/player READMEs. The author writes the release changelog and Known Issues. The generated changelog was preserved under history and excluded from future ZIPs; baseline narratives are no longer exported in them. Accurate engineering evidence stays in STATUS/history.
+Unified install option; required ModOptionsMenu, optional ModBindingsMenu, forced INI without MBM. Normal/INI/performance OFF remain first-use defaults. Player-facing descriptions show current capabilities only; author owns release changelogs and Known Issues. F2-F5 uses the ASCII hyphen in every locale. Menu actions remain manually bound under the dependency's current public API, and existing user bindings are preserved.
 
-All locale performance descriptions now use ASCII F2-F5 rather than the unsupported en dash. Existing independent settings and native bindings are preserved. ModBindingsMenu's current installed/upstream public API has no default-key setter; automatic actions start unbound. No private default writer or input.config replacement was introduced. The five menu actions can be set manually to Press F1-F5.
+## Captured cause
 
-## Live evidence and unresolved issue
+Private frozen evidence: local_data/menu-keyboard-capture-20261007/ (probe, gameplay, menu/loader logs, settings and file hashes).
 
-Frozen private evidence: local_data/menu-perf-failure-20261007/ (four logs and menu configuration snapshots with hashes).
+2026-10-07 14:46:04: native profiler registry has 13 devices; keyboard at index 8 has exactly the same dictionary header as Lua Keyboard. Header: count 204, primary modulo divisor 319. F2 is at 270, F4 at 228, F5 at 193. F3 follows 62 -> 326, where the expected hash and numeric ID 114 are stored. Its row is in the collision area beyond the primary divisor. Public F1-F5 IDs are 112-116.
 
-2026-10-07 14:07:07–14:09:24: multiple performance_data_unavailable keyboard_dictionary_chain refusals. They occur while locating the dictionary, before any write. Other logs show M102 and Maelstrom switches completing and Normal/Enhanced plus INI/menu choices applying; they do not establish remote rendering outcomes.
+The old filter required every linked index to be below the divisor. This incorrectly rejected the valid F3 overflow row and prevented all four edits. The diagnostic did no game-memory writes.
 
-The error log lacks the divisor, count, actual next indices and the lookup-device identity. The native leaf reader bounds its initial modulo by +0x94 but does not bound later chain indices by that divisor. Whether the actual failure is an overflow/collision area, another device or metadata interpretation cannot be established from this log. Do not weaken write checks speculatively.
+## Change and guards
 
-## One-shot diagnostic
+Follow only the four existing name chains, including collision entries. Storage is bounded by divisor + live count and readable mapped space, with the existing 64-step/cycle budget. No linear dictionary or process-wide scan. Validate the native lookup contracts, writable non-executable data, public numeric key IDs and entire row identity before each edit. Only four value DWORDs change; names, chains, reverse-name arrays and numeric binding maps remain intact.
 
-outputs/Vehicle-Seat-Menu-Input-Probe-0.1.1.zip
-SHA-256: 7988dd7824387cc9c07ce8ba77af454fd7485ac56827f266fd7c0737fd921955
-Size: 9020 bytes.
+Restore checks the complete original row, including its next link, and the device dictionary header. Foreign code/link/header changes are preserved and logged; a failed partial rollback retains restore_failed and its saved rows for a guarded retry. Menu opening, focus loss, OFF and shutdown continue restoring the original data. No instruction patch or anti-cheat changes.
 
-Independent GUID d84b964e-a9c6-48d2-a781-1642057fe243, resource mods/vehicle_seat_tools/menu_input_probe, tag VehicleSeatMenuInputProbe. It does not use the old gameplay-conflicting VehicleSeatNetworkDiagnostic tag/resource.
+## Verification and delivery
 
-The core reads public F1-F5 IDs, the native profiler's small device registry, the Lua keyboard closure, its dictionary header and bounded candidate/chains (at most 4096 slots once), plus only this addon's assigned menu action records when ready. No game-memory writes, executable changes, input injection, seat changes, network sends or process-wide scan. It stops after one capture. Captures retry only while the keyboard is not loaded; the first attempt is after 15 seconds, max startup wait 60 seconds.
+34 offline groups pass, including the captured F3 geometry as a regression fixture. The shipped 0.4.2 module fails that fixture before writing; 0.4.3 filters and restores all four keys, keeps cached numeric actions, and refuses genuinely invalid storage, cycles, executable data and foreign link changes. Actual engine/native-action consumers are simulated where declared. No real game was launched by these tests.
 
-Log: %LOCALAPPDATA%/CowboyBingus/Helldivers2/Logs/VehicleSeatMenuInputProbe.log
-User procedure: keep current seat addon and dependencies, import/enable probe, deploy and start; wait on ship 30 seconds, exit and report completion; disable probe after collection. No mission or multiplayer needed. Stop data-dependent performance work until this evidence arrives, then implement/validate the actual lookup correction and create the next formal package.
+Real Arsenal 0.36.2 isolated import/deploy/purge passed with exactly three unchanged patch files. Exact runtime/source/validation/CRC/defaults and player-description checks pass. No diagnostics, generated changelog, baseline narrative, raw logs or original game assets are included in the formal ZIP. Existing packages are preserved.
 
-## Offline verification
+ZIP: outputs/Vehicle-Specified-Seat-Switch-0.4.3.zip
+Size: 665776 bytes
+SHA-256: 97d222db8175608b6c9cf9912053f3e4ca0622537e9c5e675b0f215dc3a85e14
+Lua SHA-256: 6ac96e2a3f6278548cad81f1dabd1785546d6006a1b519042cdb6bedb4788495
+Native helper unchanged: 7c533e1b812b0be2cf58e418ac397d5025b3b71ebea8d41530a53a830534437f
 
-Retained 34 gameplay/menu/captured-contract regression groups pass against the current composition. The separate diagnostic test covers bounded reads, candidate visibility outside the initial divisor, RIP-relative registry resolution, oversized registry refusal and no game-memory writes. Packaging statically rejects write/protection/allocation/input-injection imports in the probe.
+Next useful live check: disable the read-only probe, exit/deploy 0.4.3 and restart. On ship or solo mission, enable performance blocking and check F2-F5 under INI and menu sources, then disable it and check normal monitor controls return. Check native menu rebinding remains usable. No new raw capture or multiplayer gathering is needed. Read VehicleSeatSwitch.log if the filter reports unavailable or restoration failure.
 
-Real Arsenal 0.36.2 isolated simultaneous import/deploy/purge with 0.4.2 passes: two distinct GUIDs, six exact payload files, unchanged hashes, sources/helpers not deployed, fixture purged. No actual game/profile was modified or launched. Build records remain ignored under build/.
-
-Earlier accepted seat evidence and unresolved four-player live confirmation remain documented in history; do not move that developer qualification into the player introduction.
+Prior seat-core live evidence and four-player verification boundaries remain in historical developer records, not in the player introduction. Git push is authorized once after this turn's finished source/tests/docs are committed; the user manages Releases.

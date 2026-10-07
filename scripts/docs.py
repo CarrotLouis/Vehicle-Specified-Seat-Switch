@@ -3,10 +3,10 @@ from pathlib import Path
 R=Path(__file__).resolve().parents[1]/'docs'
 manifest={'Version':1,'Guid':'caab3d07-e0b5-4998-98c9-92888a7e0f88',
  'Name':'Vehicle Specified Seat Switch / 载具指定座位切换',
- 'Description':'0.4.2：始终留在车内，用快捷键切换到指定空座。支持三辆 FRV、Bastion、Maelstrom 和任务油罐车。接入 ModOptionsMenu，游戏内热切换普通版／加强版、INI／菜单按键。普通版、INI为首次默认值。加强版支持单人及多人，仅使用者需要安装。\n\n0.4.2: stay aboard and switch to specified vacant seats. Supports three FRVs, Bastion, Maelstrom and the mission tanker. ModOptionsMenu selects Normal/Enhanced, independent INI/menu bindings in-game. Initial defaults: Normal and INI. Enhanced supports solo/multiplayer; only the user of the feature needs to install it.',
+ 'Description':'0.4.3：始终留在车内，用快捷键切换到指定空座。支持三辆 FRV、Bastion、Maelstrom 和任务油罐车。接入 ModOptionsMenu，游戏内热切换普通版／加强版、INI／菜单按键。普通版、INI为首次默认值。加强版支持单人及多人，仅使用者需要安装。\n\n0.4.3: stay aboard and switch to specified vacant seats. Supports three FRVs, Bastion, Maelstrom and the mission tanker. ModOptionsMenu selects Normal/Enhanced, independent INI/menu bindings in-game. Initial defaults: Normal and INI. Enhanced supports solo/multiplayer; only the user of the feature needs to install it.',
  'Options':[{'Name':'安装模组 / Install addon','Include':['Mod'],
  'Description':'统一安装包，在游戏内选择普通版或加强版。普通版保留原有座位分组；加强版允许跨区换座。需要 Bingus Shared Loader；需要 ModOptionsMenu，ModBindingsMenu 为可选依赖。\n\nUnified package: choose the variant in-game. Normal retains native seat groups; Enhanced allows cross-group switching. Requires Bingus Shared Loader; ModOptionsMenu is required; ModBindingsMenu is optional. '}]}
-zh=r'''Vehicle Specified Seat Switch 0.4.2
+zh=r'''Vehicle Specified Seat Switch 0.4.3
 
 留在载具内，按快捷键切换到指定空座。已被队友占用或预留的座位不可切换。
 支持 M-102 Gunner FRV、M-103 Supply FRV、M-104 Incinerator FRV、TD-220 Bastion MK XVI、TD-110 Maelstrom 和特殊任务油罐车。
@@ -76,7 +76,7 @@ INI 默认键位／座位范围
 反馈时附游戏版本、模组版本、普通／加强模式、按键策略、房主／客机、车型、复现步骤，以及以上相关日志。
 无需发送 GitHub 凭据或游戏整个内存转储。
 '''
-en=r'''Vehicle Specified Seat Switch 0.4.2
+en=r'''Vehicle Specified Seat Switch 0.4.3
 
 Stay aboard and switch to a specified vacant seat. Occupied or reserved seats remain unavailable.
 Supports M-102 Gunner, M-103 Supply and M-104 Incinerator FRVs, TD-220 Bastion MK XVI, TD-110 Maelstrom and the mission tanker.
@@ -150,7 +150,7 @@ def write_docs():
     for n,text in [('README_中文.txt',zh),('README_English.txt',en)]:
         (R/n).write_text(text,encoding='utf-8',newline='\n')
     for n in ['KEYS_按键清单.txt','KEYS_English.txt']:
-        text=(R/n).read_text(encoding='utf-8').replace('0.3.0','0.4.2').replace('0.4.1','0.4.2')
+        text=(R/n).read_text(encoding='utf-8').replace('0.3.0','0.4.3').replace('0.4.1','0.4.3').replace('0.4.2','0.4.3')
         footer='\n此清单仅适用于 VehicleSeatSwitch.ini；ModBindingsMenu 按游戏原生菜单允许的范围设置。\nThis list is for VehicleSeatSwitch.ini; ModBindingsMenu uses the native menu\'s supported range.\n'
         if not text.endswith(footer):text+=footer
         (R/n).write_text(text,encoding='utf-8',newline='\n')

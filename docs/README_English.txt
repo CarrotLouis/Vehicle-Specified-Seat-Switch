@@ -1,4 +1,4 @@
-Vehicle Specified Seat Switch 0.4.2
+Vehicle Specified Seat Switch 0.4.3
 
 Stay aboard and switch to a specified vacant seat. Occupied or reserved seats remain unavailable.
 Supports M-102 Gunner, M-103 Supply and M-104 Incinerator FRVs, TD-220 Bastion MK XVI, TD-110 Maelstrom and the mission tanker.

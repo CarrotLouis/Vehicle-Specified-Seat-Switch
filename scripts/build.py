@@ -4,7 +4,7 @@ import hashlib,json,struct,subprocess,sys,zipfile
 R=Path(__file__).resolve().parents[1];W=R;P=R.parent;S=R/'src';B=R/'build';N=R/'native';D=R/'docs';B.mkdir(exist_ok=True)
 sys.path.insert(0,str(W))
 from archive_format import make_archive,resource_hash,ARCHIVE
-VERSION='0.4.3';NAME='mods/vehicle_seat_tools/vehicle_seat_switch'
+VERSION='0.4.4';NAME='mods/vehicle_seat_tools/vehicle_seat_switch'
 files={};bundle_hashes={};used={}
 def compose(mode):
     source=f'-- HD2-Addon: {NAME}\nlocal MODE="{mode}"\n'
@@ -44,6 +44,7 @@ def compose(mode):
     module('solo_native',S/'solo_native.lua')
     for name,file in [('bingus_text','bingus_text'),('menu_locales','menu_locales'),('menu_integration','menu'),('input_source','input_source'),('i18n','i18n'),('performance_data','performance_data'),('performance_data_spec','performance_data_spec')]:
         module(name,S/(file+'.lua'))
+    module('native_library',S/'native_library.lua')
     source+=(S/'entry.lua').read_text(encoding='utf-8')
     return source.encode()
 for mode,folder in [('full','Mod')]:
@@ -75,6 +76,17 @@ for name in ['native.c','gate.c','bridge.S','watched.h','test_production_gate.c'
 for name in ['vss_transport.dll','native-build.json']:files['Source/transport/'+name]=(B/name).read_bytes()
 files['Source/transport/build_native.py']=(R/'scripts/build_native.py').read_bytes()
 files['Source/input/input_native.c']=(N/'input_native.c').read_bytes()
+files['Source/input/build_input_native.py']=(R/'scripts/build_input_native.py').read_bytes()
+files['Source/native_library.lua']=(S/'native_library.lua').read_bytes()
+subprocess.run([sys.executable,str(R/'scripts/audit_native_helpers.py')],check=True)
+native_manifest=(B/'native-helpers.json').read_bytes()
+native_rows=json.loads(native_manifest)['helpers']
+files['NATIVE_HELPERS.json']=native_manifest
+files['SECURITY.md']=(R/'SECURITY.md').read_bytes()
+for row in native_rows:
+    path=B/('vss_transport.dll'if row['kind']=='VSSTransport'else'vss_input_priority.dll')
+    files['Native/'+row['filename']]=path.read_bytes()
+files['SHA256SUMS.txt']=''.join(row['sha256']+'  Native/'+row['filename']+'\n'for row in native_rows).encode()
 files['Source/validation.json']=(B/'tests-passed.json').read_bytes()
 dest=P/f'outputs/Vehicle-Specified-Seat-Switch-{VERSION}.zip'
 assert not dest.exists(),'preserve existing published ZIP'

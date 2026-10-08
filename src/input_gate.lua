@@ -24,14 +24,12 @@ return function(api,loader,helper,policy,snapshot,eligible,emit)
  end
  local function open()
   assert(not lib,'input_priority_already_loaded')
-  local bytes=helper.hex:gsub('..',function(x)return string.char(tonumber(x,16))end)
-  assert(#bytes==helper.size and #bytes<=65536 and bytes:sub(1,2)=='MZ','input_helper_payload_invalid')
-  local path=assert(loader.log_directory,'missing_log_directory')..'/VSSInputPriority-'..helper.sha256..'.dll'
-  local f=io.open(path,'rb')
-  if f then local b=f:read(helper.size+1);f:close();assert(b==bytes,'input_helper_file_mismatch')
-  else f=assert(io.open(path..'.tmp','wb'));assert(f:write(bytes));assert(f:close());assert(os.rename(path..'.tmp',path))end
-  f=assert(io.open(path,'rb'));local b=f:read(helper.size+1);f:close();assert(b==bytes,'input_helper_verify_failed')
-  lib=ffi.load(path);self.library=lib
+  lib,self.library_path=assert(api.native_library,'native_library_loader_missing')(helper,'VSSInputPriority',{
+   VSSI_version='uint32_t (*)(void)',VSSI_record_size='uint32_t (*)(void)',VSSI_start='int (*)(void *)',
+   VSSI_status='int (*)(void)',VSSI_arm='int (*)(const VSSI_Item *,uint32_t,uint32_t,uint64_t,uint64_t)',
+   VSSI_health='uint32_t (*)(void)',VSSI_stop='uint32_t (*)(void)',VSSI_dropped='uint32_t (*)(void)',
+   VSSI_suppressed='uint32_t (*)(uint32_t)',VSSI_drain='uint32_t (*)(VSSI_Record *,uint32_t)'})
+  self.library=lib
   assert(lib.VSSI_version()==2 and lib.VSSI_record_size()==ffi.sizeof('VSSI_Record'),'input_priority_ABI_mismatch')
   buffer=ffi.new('VSSI_Record[256]');items=ffi.new('VSSI_Item[5]')
   local u=ffi.load('user32');local code=tonumber(lib.VSSI_start(u.GetForegroundWindow()))

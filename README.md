@@ -4,7 +4,7 @@ English | [简体中文](README.zh-CN.md)
 
 Helldivers 2 addon for switching directly to specified vacant vehicle seats while staying aboard. Supports M-102, M-103 and M-104 FRVs, TD-220 Bastion MK XVI, TD-110 Maelstrom and the mission tanker. Enhanced works for the installing player with unmodded teammates, as host or guest. Occupied and reserved seats remain protected.
 
-Current revision: **0.4.3**. [ModOptionsMenu](https://github.com/CowboyBingus/ModOptionsMenu) and [Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader) are required. [ModBindingsMenu](https://github.com/CowboyBingus/ModBindingsMenu) is optional. Without it, only INI is available; a saved menu-source selection cannot enable an absent dependency.
+Current revision: **0.4.4**. [ModOptionsMenu](https://github.com/CowboyBingus/ModOptionsMenu) and [Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader) are required. [ModBindingsMenu](https://github.com/CowboyBingus/ModBindingsMenu) is optional. Without it, only INI is available; a saved menu-source selection cannot enable an absent dependency.
 
 Import the complete ZIP into Arsenal and enable its single install option. Choose Normal/Enhanced in the game's MODS options page. First-use defaults: **Normal, INI, performance blocking Off**. One resident Enhanced controller implements both modes; Normal restricts allowed seat combinations. Changes wait for the current switch to finish.
 
@@ -13,6 +13,10 @@ INI keys are at `%APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini`. Native 
 ## Controls
 
 Use the MODS options page for Normal/Enhanced, key strategy and performance shortcut blocking (default Off). Translated labels follow the game's text language. Native menu bindings currently start unbound under ModBindingsMenu's public API: assign F1-F5 with Press, or choose your own keys.
+
+## Native helpers
+
+This addon includes two unsigned native DLLs for synchronous seat confirmations and own-window input coordination. They are embedded in the ZIP, verified and cached under `%LOCALAPPDATA%\CowboyBingus\Helldivers2\VehicleSeatSwitch\Native`. The package exposes their binaries, source and SHA-256 hashes. Read [SECURITY.md](SECURITY.md) for the exact purpose, file checks and trust boundary.
 
 ## Project layout
 
@@ -38,9 +42,11 @@ The Lua tests retain the `work/` path convention. Clone to a folder named `work`
 git clone https://github.com/CarrotLouis/Vehicle-Specified-Seat-Switch.git work
 python -X utf8 work/scripts/make_locales.py
 python -X utf8 work/scripts/build_native.py
+python -X utf8 work/scripts/build_input_native.py
+python -X utf8 work/scripts/audit_native_helpers.py
 python -X utf8 work/scripts/validate.py
 python -X utf8 work/scripts/build.py --package
-node work/scripts/test_arsenal.cjs outputs/Vehicle-Specified-Seat-Switch-0.4.3.zip
+node work/scripts/test_arsenal.cjs outputs/Vehicle-Specified-Seat-Switch-0.4.4.zip
 python -X utf8 work/scripts/verify_artifact.py <result.json printed by the Arsenal check>
 ```
 

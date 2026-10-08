@@ -3,9 +3,9 @@ from pathlib import Path
 import hashlib,json,struct,sys,zipfile
 from archive_format import resource_hash,ARCHIVE,TYPE
 R=Path(__file__).resolve().parents[1];B=R/'build';D=R/'docs'
-zpath=R.parent/'outputs/Vehicle-Specified-Seat-Switch-0.4.3.zip'
+zpath=R.parent/'outputs/Vehicle-Specified-Seat-Switch-0.4.4.zip'
 package=json.loads((B/'package.json').read_text())
-checks=json.loads((B/'tests-passed.json').read_text());assert len(checks['checks'])==34
+checks=json.loads((B/'tests-passed.json').read_text());assert len(checks['checks'])==35
 assembly=json.loads((B/'assembly.json').read_text())
 with zipfile.ZipFile(zpath)as z:
     assert z.testzip()is None
@@ -29,6 +29,13 @@ with zipfile.ZipFile(zpath)as z:
         assert z.read(n)==(D/n).read_bytes()
     assert z.read('VehicleSeatSwitch.ini.example')==(R/'examples/VehicleSeatSwitch.ini.example').read_bytes()
     assert z.read('Source/entry.lua')==(R/'src/entry.lua').read_bytes()
+    assert z.read('SECURITY.md')==(R/'SECURITY.md').read_bytes()
+    native=json.loads(z.read('NATIVE_HELPERS.json'))['helpers'];assert len(native)==2
+    for row in native:
+        data=z.read('Native/'+row['filename'])
+        assert len(data)==row['bytes']and hashlib.sha256(data).hexdigest()==row['sha256']
+        assert row['sha256']in z.read('SHA256SUMS.txt').decode()
+    assert b'native_library.new'in runtime and b'VSSNL_Load'in runtime
     for relative,digest in assembly['modules'].items():
         source=(R/relative).read_bytes()
         # Bundling uses Python's canonical text newlines; source exports also
@@ -51,7 +58,7 @@ with zipfile.ZipFile(zpath)as z:
     assert not any(n.endswith('.log')or n.startswith(('Normal/','Enhanced/','Performance/'))for n in z.namelist())
     assert not any('CHANGELOG'in n or n=='Source/baseline.txt'for n in z.namelist())
     introductions=z.read('README_中文.txt').decode()+z.read('README_English.txt').decode()+json.dumps(manifest,ensure_ascii=False)
-    for historical in ['本版修订','Revision:','验证范围','Validation\n','四人','Four-player','Three-player','0.4.0','0.4.1','0.4.2','34 组']:
+    for historical in ['本版修订','Revision:','验证范围','Validation\n','四人','Four-player','Three-player','0.4.0','0.4.1','0.4.2','0.4.3','34 组','35 组']:
         assert historical not in introductions,historical
     for n in ['menu_probe.lua','menu_probe_entry.lua']:
         assert 'Source/modules/'+n not in z.namelist(),'one-shot diagnostics do not ship in the formal runtime'

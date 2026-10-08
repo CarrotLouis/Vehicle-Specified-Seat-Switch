@@ -1,4 +1,4 @@
-Vehicle Specified Seat Switch 0.4.3
+Vehicle Specified Seat Switch 0.4.4
 
 留在载具内，按快捷键切换到指定空座。已被队友占用或预留的座位不可切换。
 支持 M-102 Gunner FRV、M-103 Supply FRV、M-104 Incinerator FRV、TD-220 Bastion MK XVI、TD-110 Maelstrom 和特殊任务油罐车。
@@ -61,6 +61,11 @@ INI 默认键位／座位范围
 菜单模组本身按游戏版本检查兼容性；遇游戏更新后菜单不可用，请查看并更新对应菜单。
 当前本地 ModOptionsMenu 的旧接口版本最多展示 8 个模组类别；如本模组未显示，请更新至项目当前支持分页的版本。
 不修改／保存用户的游戏原生按键映射。发行包不包含持续采集或全进程扫描。
+
+原生辅助模块
+本模组使用两个本地 DLL，处理联机换座确认与游戏窗口内的换座按键。它们来自本 ZIP 内嵌数据，运行时校验后缓存到：
+%LOCALAPPDATA%\CowboyBingus\Helldivers2\VehicleSeatSwitch\Native
+ZIP 的 Native/ 目录提供同样的 DLL，源码和哈希清单随包附带。DLL 未签名；详细用途和校验方式见 SECURITY.md。关闭游戏后可删除缓存，下次需要时会重新生成。
 
 日志与反馈
 %LOCALAPPDATA%\CowboyBingus\Helldivers2\Logs\VehicleSeatSwitch.log

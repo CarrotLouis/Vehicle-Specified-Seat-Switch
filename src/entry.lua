@@ -1,7 +1,7 @@
 -- One addon, one physical key poller, selectable native/solo/network routes.
 local tag='VehicleSeatSwitch'
 if rawget(_G,tag) then return end
-local state={version='0.4.3',mode='normal',status='starting'}
+local state={version='0.4.4',mode='normal',status='starting'}
 rawset(_G,tag,state)
 local loader=rawget(_G,'CowboyBingusModLoader')
 local previous,previous_shutdown=update,shutdown
@@ -38,6 +38,7 @@ local function init()
  assert(not rawget(_G,'VehicleSeatNetworkDiagnostic'),'disable_old_seat_diagnostic_before_using_release')
  assert(not rawget(_G,'Hd2TankSeatSwitch')and not rawget(_G,'Hd2TankSeatRoles'),'disable_other_seat_controller_before_using_release')
  api=pages(platform(module_hash));game=assert(api.module('game.dll'))
+ api.native_library=native_library.new(log).load
  resolver=normal_compat.start(api,game,profile,normal_compat_spec,'normal',log)
  menus=menu_integration.new(i18n(bingus_text),menu_locales,log);menus:update()
  performance_blocker=performance_data.new(api,performance_data_spec,log)

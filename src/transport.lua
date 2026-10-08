@@ -45,14 +45,13 @@ return function(api,game,p,loader,writer,reader,observer,route_reader,messages,h
    ffi.copy(bindings[i-1].head,assert(api.read(expected[i],32),'target_head_unreadable'),32)
    guards[i-1].slot=ffi.cast('void **',refs[i]);guards[i-1].target=values[i]
   end
-  local bytes=helper.hex:gsub('..',function(x)return string.char(tonumber(x,16))end)
-  assert(#bytes==helper.size and bytes:sub(1,2)=='MZ','helper_payload_invalid')
-  local path=assert(loader.log_directory,'missing_log_directory')..'/VSSTransport-'..helper.sha256..'.dll'
-  local f=io.open(path,'rb')
-  if f then local existing=f:read('*a');f:close();assert(existing==bytes,'helper_file_mismatch')
-  else local temp=path..'.tmp';f=assert(io.open(temp,'wb'));assert(f:write(bytes));assert(f:close());assert(os.rename(temp,path))end
-  f=assert(io.open(path,'rb'));local actual=f:read('*a');f:close();assert(actual==bytes,'helper_verify_failed')
-  lib=ffi.load(path);self.library=lib
+  lib,self.library_path=assert(api.native_library,'native_library_loader_missing')(helper,'VSSTransport',{
+   VSST_version='uint32_t (*)(void)',VSST_record_size='uint32_t (*)(void)',VSST_frequency='uint64_t (*)(void)',
+   VSST_dropped='uint64_t (*)(void)',VSST_health='uint32_t (*)(void)',VSST_stop='uint32_t (*)(void)',
+   VSST_start='int (*)(const VSST_Binding *,const VSST_Guard *)',
+   VSST_gate_arm='int (*)(const VSSR_GateConfig *)',VSST_gate_peek='uint32_t (*)(VSSR_GateRecord *)',
+   VSST_gate_finish='int (*)(uint64_t)',VSST_gate_active='uint32_t (*)(void)',VSST_gate_shutdown='void (*)(void)'})
+  self.library=lib
   assert(lib.VSST_version()==4 and lib.VSST_record_size()==ffi.sizeof('VSST_Record'),'transport_ABI_mismatch')
   buffer=nil
   local code=tonumber(lib.VSST_start(bindings,guards))

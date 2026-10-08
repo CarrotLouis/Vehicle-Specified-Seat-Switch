@@ -19,6 +19,7 @@ local route={capture=function()local list={};for hash,name in pairs(messages)do 
 local observer={locate=function()return 0x80 end}
 local dir=assert(os.getenv('VSS_TRANSPORT_TEST_DIR'))
 local loader={log_directory=dir}
+local cache=dofile('work/src/native_library.lua').new(function()end,dir..'/Native-缓存')
 local events={};local writer={closed=false,write=function(_,e)events[#events+1]=e end}
 factory(api,game,p,loader,writer,{},observer,route,messages,helper)
 local original=ffi.load;local real=original('work/build/vss_transport.dll')
@@ -33,7 +34,11 @@ local mock={VSST_version=function()return 4 end,VSST_record_size=function()retur
  VSST_gate_peek=function(out)if not gate then return 0 end;ffi.copy(out,gate,56);return 1 end,
  VSST_gate_finish=function(cookie)assert(gate and gate.cookie==cookie);gate=nil;return 0 end,
  VSST_gate_shutdown=function()shutdown_count=shutdown_count+1;gate=nil end}
-ffi.load=function(path)if path:find('VSSTransport-',1,true)then return mock end;return original(path)end
+local loaded_path
+api.native_library=function(spec,kind,types)
+ local lib,path=cache.load(spec,kind,types);loaded_path=path
+ assert(lib.VSST_version()==4);return mock,path
+end
 local t=factory(api,game,p,loader,writer,{},observer,route,messages,helper)
 t:start();assert(t.active and t.drain==nil,'production must not record/drain protocol events')
 local high=ffi.new('uint64_t',0xfedcba98)*ffi.new('uint64_t',4294967296)+ffi.new('uint64_t',0x76543210)
@@ -43,8 +48,11 @@ assert(r.peer_key==key and r.source==1 and r.target==2 and r.status==1)
 gate.status=2;gate.chosen=2;r=t:gate_peek(cookie);assert(r.chosen==2);t:gate_finish(cookie)
 t:gate_arm(key,4123,4107,1,2);t:stop('error');assert(gate and shutdown_count==0)
 t:stop('shutdown');assert(not gate and shutdown_count==1)
-local path=dir..'/VSSTransport-'..helper.sha256..'.dll';local f=assert(io.open(path,'wb'));f:write('tampered');f:close()
+-- A fresh resolver must reject a corrupted cache before resolving exports.
+api.native_library=dofile('work/src/native_library.lua').new(function()end,dir).load
+local path=dir..'/VSSTransport-'..helper.sha256..'.dll'
+local f=assert(io.open(path,'wb'));f:write('tampered');f:close()
 local bad=factory(api,game,p,loader,writer,{},observer,route,messages,helper)
-local ok,err=pcall(bad.start,bad);assert(not ok and err:find('helper_file_mismatch'))
+local ok,err=pcall(bad.start,bad);assert(not ok and err:find('native_cache_size_mismatch'))
 ffi.load=original
 print('PASS actual production DLL ABI/outside-game refusal, helper extraction/tamper check, uint64 ACK tuple, pending error-stop retention and shutdown; packet recorder absent')

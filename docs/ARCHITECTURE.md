@@ -29,3 +29,7 @@ Current build and checks use `scripts/`; output goes to ignored `build/` and the
 ## Current read-only menu probe
 
 menu_probe.lua/menu_probe_entry.lua are a separate one-shot diagnostic, not part of the formal runtime. It has an independent resource/GUID and delegates to the previous update/shutdown callbacks. It compares the profiler registry with the Lua keyboard device and records only bounded keyboard metadata and this mod's native action records. It declares read/query APIs only. The completed capture and resulting collision fix are recorded in STATUS; the diagnostic is not installed with the formal addon.
+
+## Native helper provenance and loading
+
+native_library.lua extracts the embedded native payload into the addon's dedicated Native cache. It verifies SHA-256 and exact bytes, keeps a read-only-sharing file lock through LoadLibraryExW, restricts dependencies to System32 and resolves approved exports directly from the loaded handle. It records path/hash/size, supports Unicode filenames and retains references for callback lifetime. Native/ inspection copies, hashes and source accompany the ZIP; SECURITY.md explains purpose and the unsigned/same-user trust boundary. Native gameplay and input bridge binaries are unchanged in 0.4.4.

@@ -1,37 +1,38 @@
-# 0.4.3 checkpoint — 2026-10-07
+# 0.4.4 checkpoint — 2026-10-08
 
-## Outcome
+## Current scope
 
-The one-shot keyboard capture is usable and establishes the failure of the performance filter. Revision 0.4.3 supports the observed collision rows without relaxing identity, code or write guards. A formal ZIP has been built and checked offline; exact live filter behavior still needs a short solo confirmation.
+User reports concern about an extracted VSSTransport-<SHA256>.dll in the loader Logs directory. The naming pattern comes from this addon. Local cached transport/input files match the embedded shipped helpers exactly. Inspection found expected own-process/window behavior and system-only imports; this is not an independent malware audit or publisher signature.
 
-Unified install option; required ModOptionsMenu, optional ModBindingsMenu, forced INI without MBM. Normal/INI/performance OFF remain first-use defaults. Player-facing descriptions show current capabilities only; author owns release changelogs and Known Issues. F2-F5 uses the ASCII hyphen in every locale. Menu actions remain manually bound under the dependency's current public API, and existing user bindings are preserved.
+Revision 0.4.4 keeps the two native binaries unchanged, moves extraction into %LOCALAPPDATA%/CowboyBingus/Helldivers2/VehicleSeatSwitch/Native, and adds explicit installer/player disclosure, SECURITY.md, visible Native/ binaries, SHA256SUMS.txt and NATIVE_HELPERS.json. The ZIP does not deploy those inspection copies into game bin; Arsenal still deploys three addon patch files. No online download, administrator prompt, antivirus exception, new process launch or system startup registration was added. Existing old cache files were not deleted.
 
-## Captured cause
+Unified option, required ModOptionsMenu, optional ModBindingsMenu, independent INI/menu keys, resident Enhanced and Normal permissions remain. Player introductions describe current functions only. User manages changelogs, Known Issues and Releases. The 0.4.3 monitor collision fix is retained but its exact live test has not been reported yet.
 
-Private frozen evidence: local_data/menu-keyboard-capture-20261007/ (probe, gameplay, menu/loader logs, settings and file hashes).
+## Loader changes
 
-2026-10-07 14:46:04: native profiler registry has 13 devices; keyboard at index 8 has exactly the same dictionary header as Lua Keyboard. Header: count 204, primary modulo divisor 319. F2 is at 270, F4 at 228, F5 at 193. F3 follows 62 -> 326, where the expected hash and numeric ID 114 are stored. Its row is in the collision area beyond the primary divisor. Public F1-F5 IDs are 112-116.
+src/native_library.lua is the common loader used by transport.lua and input_gate.lua. It verifies the embedded SHA-256, bounds the payload, validates cached file size and exact bytes, rejects final-file reparse points, and holds a read-sharing-only file handle through load. Unicode Windows IO supports non-ASCII usernames. LoadLibraryExW uses a full path and LOAD_LIBRARY_SEARCH_SYSTEM32; exported functions are obtained directly from that handle, avoiding a second default-search ffi.load call. The loaded module path is checked. Mismatches refuse loading rather than overwriting or executing cache data. No process-wide DLL search settings change.
 
-The old filter required every linked index to be below the divisor. This incorrectly rejected the valid F3 overflow row and prevented all four edits. The diagnostic did no game-memory writes.
+References remain for process lifetime because native callbacks can outlive Lua cleanup; native bridges already pin themselves on activation. Same-user compromised packages/accounts are outside the trust boundary. Helpers are unsigned; hashes bind known bytes but do not authenticate a publisher or arbitrary downloaded file.
 
-## Change and guards
+## Audit and reproducibility
 
-Follow only the four existing name chains, including collision entries. Storage is bounded by divisor + live count and readable mapped space, with the existing 64-step/cycle budget. No linear dictionary or process-wide scan. Validate the native lookup contracts, writable non-executable data, public numeric key IDs and entire row identity before each edit. Only four value DWORDs change; names, chains, reverse-name arrays and numeric binding maps remain intact.
+Transport: 16245 bytes, SHA-256 7c533e1b812b0be2cf58e418ac397d5025b3b71ebea8d41530a53a830534437f; static imports Kernel32/MSVCRT; ABI4; DllMain entry point zero. Release protocol recording is disabled. It synchronously matches the active own-seat confirmation and forwards other replies using existing game handlers.
 
-Restore checks the complete original row, including its next link, and the device dictionary header. Foreign code/link/header changes are preserved and logged; a failed partial rollback retains restore_failed and its saved rows for a guarded retry. Menu opening, focus loss, OFF and shutdown continue restoring the original data. No instruction patch or anti-cheat changes.
+Input: 11264 bytes, SHA-256 2c1c290b4e869fbadd1cba4fdaa8d042731359d497d006287e12395c496e0e1b; static imports Kernel32/User32; ABI2; DllMain entry point zero. It validates own PID/window/thread before temporary own-thread WH_GETMESSAGE coordination and window-procedure attachment. Selected intents use a bounded memory queue, not a general persisted keyboard log.
 
-## Verification and delivery
+scripts/build_input_native.py reproduces the existing embedded binary byte-for-byte. The preferred image base is recorded as 0x6ac00000 because MinGW auto-base depended on its original output directory; ASLR remains enabled. Initial recompile differed only because of that base. scripts/audit_native_helpers.py verifies hashes, imports and zero entry points, and writes the inspection manifest. No native core was replaced this turn.
 
-34 offline groups pass, including the captured F3 geometry as a regression fixture. The shipped 0.4.2 module fails that fixture before writing; 0.4.3 filters and restores all four keys, keeps cached numeric actions, and refuses genuinely invalid storage, cycles, executable data and foreign link changes. Actual engine/native-action consumers are simulated where declared. No real game was launched by these tests.
+## Validation and artifact
 
-Real Arsenal 0.36.2 isolated import/deploy/purge passed with exactly three unchanged patch files. Exact runtime/source/validation/CRC/defaults and player-description checks pass. No diagnostics, generated changelog, baseline narrative, raw logs or original game assets are included in the formal ZIP. Existing packages are preserved.
+35 offline groups pass. New real Windows tests cover Unicode extraction/reuse, CNG SHA-256, restricted library loading, loaded-path verification, both helper ABIs outside the game, exact-size cache corruption, invalid payload/kind/path and absent-export refusal. Existing receiver/tank/seat/menu/monitor contracts remain tested with declared engine doubles. No game or live profile was changed or launched.
 
-ZIP: outputs/Vehicle-Specified-Seat-Switch-0.4.3.zip
-Size: 665776 bytes
-SHA-256: 97d222db8175608b6c9cf9912053f3e4ca0622537e9c5e675b0f215dc3a85e14
-Lua SHA-256: 6ac96e2a3f6278548cad81f1dabd1785546d6006a1b519042cdb6bedb4788495
-Native helper unchanged: 7c533e1b812b0be2cf58e418ac397d5025b3b71ebea8d41530a53a830534437f
+Isolated real Arsenal 0.36.2 import/deploy/purge passed; exactly three payload files, hashes preserved, Native/ and Source/ not installed to game bin. Artifact/source/validation/CRC/default/description/native-manifest checks pass.
 
-Next useful live check: disable the read-only probe, exit/deploy 0.4.3 and restart. On ship or solo mission, enable performance blocking and check F2-F5 under INI and menu sources, then disable it and check normal monitor controls return. Check native menu rebinding remains usable. No new raw capture or multiplayer gathering is needed. Read VehicleSeatSwitch.log if the filter reports unavailable or restoration failure.
+ZIP outputs/Vehicle-Specified-Seat-Switch-0.4.4.zip
+Bytes 691477
+SHA-256 f0e6dd0e1926e241e6754af458f45de27b8951772e654bfed9afbf7bdd4f2274
+Lua SHA-256 ddcf772036e46c8bbbb5cce403c53c1999d9c7506393b648e3163a5875246ee6
 
-Prior seat-core live evidence and four-player verification boundaries remain in historical developer records, not in the player introduction. Git push is authorized once after this turn's finished source/tests/docs are committed; the user manages Releases.
+Next useful check: exit/deploy/restart 0.4.4, perform one solo and one ordinary multiplayer switch if available, and inspect native_helper_verified entries in VehicleSeatSwitch.log for the new cache path. A multiplayer gathering is not required just for security validation; actual synchronous export-loader behavior in the game remains to confirm. Do not delete cached helpers while the game is running. Older cache files can be removed manually after exit when confirmed to be this addon's files.
+
+Earlier live/verification boundaries remain in history. Push reviewed source/tests/docs once at end; do not upload outputs/raw/local credentials or create Releases.

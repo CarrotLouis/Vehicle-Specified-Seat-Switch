@@ -1,4 +1,4 @@
-Vehicle Specified Seat Switch 0.4.3
+Vehicle Specified Seat Switch 0.4.4
 
 Stay aboard and switch to a specified vacant seat. Occupied or reserved seats remain unavailable.
 Supports M-102 Gunner, M-103 Supply and M-104 Incinerator FRVs, TD-220 Bastion MK XVI, TD-110 Maelstrom and the mission tanker.
@@ -61,6 +61,11 @@ If a native menu key is also a firing/lean/movement control, release that confli
 The menu addons enforce their own game-build support. Update the affected menu after a game update if it becomes inactive.
 The locally installed older ModOptionsMenu API only displays eight mod categories; update to the project's current paged version if this category is missing.
 No native input mapping is changed/saved by this addon. The release has no continuous diagnostic recording or whole-process scan.
+
+Native helpers
+Two local DLL helpers handle seat confirmations and selected inputs in the game window. They are embedded in this ZIP and verified before caching at:
+%LOCALAPPDATA%\CowboyBingus\Helldivers2\VehicleSeatSwitch\Native
+Native/ provides the same DLLs openly, with sources and hashes included. The DLLs are unsigned; see SECURITY.md for their purpose and verification. Close the game before deleting the cache; it is recreated when needed.
 
 Logs and reports
 %LOCALAPPDATA%\CowboyBingus\Helldivers2\Logs\VehicleSeatSwitch.log

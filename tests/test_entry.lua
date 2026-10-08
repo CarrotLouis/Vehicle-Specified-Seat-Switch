@@ -44,6 +44,7 @@ local api={in_image=function()return false end,describe=function()return {}end,n
  focused=function()return true end,input_allowed=function()return true end,module=function()return 1 end,
  config_directory=function()return root..'tests/config_fixture'end,read=function()return nil end}
 local env=setmetatable({
+ native_library={new=function()return{load=function()error('fixture must not load native helpers')end}end},
  MODE='full',i18n=module('i18n'),performance_data=module('performance_data'),performance_data_spec=module('performance_data_spec'),menu_integration=module('menu'),bingus_text=text,menu_locales=module('menu_locales'),input_source=module('input_source'),
  runtime_policy=runtime_policy,snapshot=snap,bind_native=function()return native end,seat_dispatcher=real_dispatcher,
  Controller=module('controller')(runtime_policy,snap,tracked_input),profile={},policy=policy,input=tracked_input,
@@ -157,7 +158,7 @@ assert(VehicleSeatSwitch.error and VehicleSeatSwitch.error:find('disable_old_sea
 VehicleSeatNetworkDiagnostic=nil
 print('PASS independent Normal fallback and old diagnostic conflict refusal')
 
-local substitutions={'snapshot','bind_native','seat_dispatcher','Controller','platform','compat','normal_compat','config','input',
+local substitutions={'native_library','snapshot','bind_native','seat_dispatcher','Controller','platform','compat','normal_compat','config','input',
  'authority_observe','transaction','sender','sync_adapter','sampler','pages','routing','transport','input_gate',
  'animation_inspect','animation_sender','binding_inspect','binding_sender','reservation_tools','solo_native','runtime_policy'}
 local f=assert(io.open(root..'build/bundled_full.lua','rb'));local bundle=f:read('*a');f:close()
@@ -165,7 +166,7 @@ assert(bundle:sub(-#source)==source)
 local bridge='\n';for _,name in ipairs(substitutions)do bridge=bridge..name..'=__fixture.'..name..'\n'end
 env.__fixture=env;enhanced=true;mission=false;count=1;options[prefix..'mode']=1
 restart(bundle:sub(1,#bundle-#source)..bridge..source);tick(610)
-assert(VehicleSeatSwitch.version=='0.4.3'and VehicleSeatSwitch.transport_ready,tostring(VehicleSeatSwitch.error))
+assert(VehicleSeatSwitch.version=='0.4.4'and VehicleSeatSwitch.transport_ready,tostring(VehicleSeatSwitch.error))
 assert(env.shutdown()=='shutdown_forwarded')
 print('PASS exact unified archive prefix with real menu/input modules and declared engine doubles')
 

@@ -1,4 +1,4 @@
-载具换座 0.4.3 — 按键与组合键清单
+载具换座 0.4.4 — 按键与组合键清单
 
 配置位置
 %APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini

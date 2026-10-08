@@ -6,7 +6,7 @@
 
 ## 安装与配置
 
-当前修订为 **0.4.3**，使用统一安装包。
+当前修订为 **0.4.4**，使用统一安装包。
 
 1. 退出游戏，启用 [Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader) v18 或以上及必需的 [ModOptionsMenu](https://github.com/CowboyBingus/ModOptionsMenu)。
 2. 按需启用 [ModBindingsMenu](https://github.com/CowboyBingus/ModBindingsMenu)，每个菜单只安装一份。
@@ -35,6 +35,10 @@ ModBindingsMenu 的五个座位动作初始未绑定，请在游戏原生按键�
 
 ModBindingsMenu 当前公开接口使自动分配的动作初始未绑定，请自行设置为“按下 F1-F5”或其他键位。项目的研究进度和验证记录单独放在 [STATUS](docs/STATUS.md)。
 
+## 原生辅助模块
+
+本模组包含两个未签名的原生 DLL，处理联机换座确认和游戏窗口内的指定换座输入。它们从 ZIP 内嵌数据释放，校验后缓存到 `%LOCALAPPDATA%\CowboyBingus\Helldivers2\VehicleSeatSwitch\Native`。安装包提供对应 DLL、源码和 SHA-256 清单；用途、校验及信任边界见 [SECURITY.md](SECURITY.md)。
+
 ## 工程目录
 
 | 目录 | 内容 |
@@ -58,9 +62,11 @@ ModBindingsMenu 当前公开接口使自动分配的动作初始未绑定，请�
 ```text
 python -X utf8 work/scripts/make_locales.py
 python -X utf8 work/scripts/build_native.py
+python -X utf8 work/scripts/build_input_native.py
+python -X utf8 work/scripts/audit_native_helpers.py
 python -X utf8 work/scripts/validate.py
 python -X utf8 work/scripts/build.py --package
-node work/scripts/test_arsenal.cjs outputs/Vehicle-Specified-Seat-Switch-0.4.3.zip
+node work/scripts/test_arsenal.cjs outputs/Vehicle-Specified-Seat-Switch-0.4.4.zip
 python -X utf8 work/scripts/verify_artifact.py <Arsenal 检查打印的 result.json 路径>
 ```
 

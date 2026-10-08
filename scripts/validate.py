@@ -17,11 +17,14 @@ run(py+[str(R/'scripts/build.py')],record=False)
 for name in ['test_transaction.lua','test_probe.lua','test_owner_paths.lua','test_room.lua','test_room_sender.lua',
  'test_room_adapter.lua','test_owned_transaction.lua','test_acquired_release.lua','test_entrance.lua','test_sender.lua',
  'test_binding.lua','test_mounted_reader.lua','test_policy.lua','test_input.lua','test_config_controller.lua',
- 'test_snapshot.lua','test_config_storage.lua','test_solo_native.lua','test_transport.lua','test_entry.lua','test_input_source.lua','test_mode_policy.lua','test_i18n.lua','test_performance_data.lua','test_optional_bindings.lua']:
+ 'test_snapshot.lua','test_config_storage.lua','test_solo_native.lua','test_transport.lua','test_native_library.lua','test_entry.lua','test_input_source.lua','test_mode_policy.lua','test_i18n.lua','test_performance_data.lua','test_optional_bindings.lua']:
     env=None
     if name=='test_transport.lua':
         fixture=R/'tests'/('transport-'+uuid.uuid4().hex);fixture.mkdir()
         env=os.environ.copy();env['VSS_TRANSPORT_TEST_DIR']=str(fixture)
+    if name=='test_native_library.lua':
+        fixture=B/('native-fixture-'+uuid.uuid4().hex);fixture.mkdir()
+        env=os.environ.copy();env['VSS_NATIVE_TEST_DIR']=str(fixture)
     run(lua+[str(R/'tests'/name)],env)
 for build in ['25327279','25480438']:
     env=os.environ.copy();env['VSS_CAPTURE']=str(R/'local_data/reverse'/('capture-'+build));env['VSS_TEST_BUILD']=build

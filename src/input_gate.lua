@@ -2,7 +2,7 @@
 return function(api,loader,helper,policy,snapshot,eligible,emit)
  local ffi=require('ffi')
  ffi.cdef[[
- typedef struct {uint32_t binding,target;} VSSI_Item;
+ typedef struct {uint32_t binding,target,held_count,held[255];} VSSI_Item;
  typedef struct {uint64_t sequence,tick,generation;uint32_t binding,source,target,message;} VSSI_Record;
  uint32_t VSSI_version(void);uint32_t VSSI_record_size(void);
  int VSSI_start(void *);int VSSI_status(void);int VSSI_arm(const VSSI_Item *,uint32_t,uint32_t,uint64_t,uint64_t);
@@ -30,7 +30,7 @@ return function(api,loader,helper,policy,snapshot,eligible,emit)
    VSSI_health='uint32_t (*)(void)',VSSI_stop='uint32_t (*)(void)',VSSI_dropped='uint32_t (*)(void)',
    VSSI_suppressed='uint32_t (*)(uint32_t)',VSSI_drain='uint32_t (*)(VSSI_Record *,uint32_t)'})
   self.library=lib
-  assert(lib.VSSI_version()==2 and lib.VSSI_record_size()==ffi.sizeof('VSSI_Record'),'input_priority_ABI_mismatch')
+  assert(lib.VSSI_version()==3 and lib.VSSI_record_size()==ffi.sizeof('VSSI_Record'),'input_priority_ABI_mismatch')
   buffer=ffi.new('VSSI_Record[256]');items=ffi.new('VSSI_Item[5]')
   local u=ffi.load('user32');local code=tonumber(lib.VSSI_start(u.GetForegroundWindow()))
   if code==0 then ready()
@@ -65,7 +65,12 @@ return function(api,loader,helper,policy,snapshot,eligible,emit)
       permitted=eligible(c,s.node,c.owner.owner==c.owner.selfpeer,nil,target)
      end
      local binding=keys[s.vehicle][seats[target+1]]
-     if permitted and binding~=0 then items[n].binding=binding;items[n].target=target;n=n+1 end
+     if permitted and binding~=0 then
+      items[n].binding=binding;items[n].target=target
+      local held=api.chords and api.chords[binding]or{};items[n].held_count=#held
+      for i,key in ipairs(held)do items[n].held[i-1]=key end
+      n=n+1
+     end
     end
    end
   end

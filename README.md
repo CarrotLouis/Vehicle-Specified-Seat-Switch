@@ -4,11 +4,13 @@ English | [简体中文](README.zh-CN.md)
 
 Helldivers 2 addon for switching directly to specified vacant vehicle seats while staying aboard. Supports M-102, M-103 and M-104 FRVs, TD-220 Bastion MK XVI, TD-110 Maelstrom and the mission tanker. Enhanced works for the installing player with unmodded teammates, as host or guest. Occupied and reserved seats remain protected.
 
-Current revision: **0.4.4**. [ModOptionsMenu](https://github.com/CowboyBingus/ModOptionsMenu) and [Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader) are required. [ModBindingsMenu](https://github.com/CowboyBingus/ModBindingsMenu) is optional. Without it, only INI is available; a saved menu-source selection cannot enable an absent dependency.
+Current revision: **0.4.5**. [ModOptionsMenu](https://github.com/CowboyBingus/ModOptionsMenu) and [Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader) are required. [ModBindingsMenu](https://github.com/CowboyBingus/ModBindingsMenu) is optional. Without it, only INI is available; a saved menu-source selection cannot enable an absent dependency.
 
 Import the complete ZIP into Arsenal and enable its single install option. Choose Normal/Enhanced in the game's MODS options page. First-use defaults: **Normal, INI, performance blocking Off**. One resident Enhanced controller implements both modes; Normal restricts allowed seat combinations. Changes wait for the current switch to finish.
 
 INI keys are at `%APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini`. Native menu actions initially have no bindings: assign them in the MODS binding page. The two configurations never overwrite each other. Player instructions: [English](docs/README_English.txt), [Chinese](docs/README_中文.txt), [accepted INI keys](docs/KEYS_English.txt).
+
+INI supports arbitrary combinations of its supported keys, including `MOUSE4+W`, `Q+E` and `CTRL+MOUSE4+Q`. Hold the preceding keys and press the final key; restart after editing. Gameplay conflicts remain the user's choice.
 
 ## Controls
 
@@ -16,7 +18,7 @@ Use the MODS options page for Normal/Enhanced, key strategy and performance shor
 
 ## Native helpers
 
-This addon includes two unsigned native DLLs for synchronous seat confirmations and own-window input coordination. They are embedded in the ZIP, verified and cached under `%LOCALAPPDATA%\CowboyBingus\Helldivers2\VehicleSeatSwitch\Native`. The package exposes their binaries, source and SHA-256 hashes. Read [SECURITY.md](SECURITY.md) for the exact purpose, file checks and trust boundary.
+This addon includes two unsigned native DLLs for synchronous seat confirmations and own-window input coordination. They are embedded in the ZIP, verified and cached under `%LOCALAPPDATA%\CowboyBingus\Helldivers2\VehicleSeatSwitch\Native`. The package exposes their binaries and SHA-256 hashes; source is published in this repository. Read [SECURITY.md](SECURITY.md) for the exact purpose, file checks and trust boundary.
 
 ## Project layout
 
@@ -46,7 +48,7 @@ python -X utf8 work/scripts/build_input_native.py
 python -X utf8 work/scripts/audit_native_helpers.py
 python -X utf8 work/scripts/validate.py
 python -X utf8 work/scripts/build.py --package
-node work/scripts/test_arsenal.cjs outputs/Vehicle-Specified-Seat-Switch-0.4.4.zip
+node work/scripts/test_arsenal.cjs outputs/Vehicle-Specified-Seat-Switch-0.4.5.zip
 python -X utf8 work/scripts/verify_artifact.py <result.json printed by the Arsenal check>
 ```
 

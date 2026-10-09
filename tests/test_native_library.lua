@@ -10,7 +10,7 @@ assert(lib.VSST_version()==4 and lib.VSST_record_size()==256)
 assert(path:find('辅助模块-ü',1,true)and #logs==1)
 assert(cache.load(transport,'VSSTransport',types)==lib and #logs==1)
 local keys,kpath=cache.load(input,'VSSInputPriority',{VSSI_version='uint32_t (*)(void)',VSSI_record_size='uint32_t (*)(void)',VSSI_start='int (*)(void *)'})
-assert(keys.VSSI_version()==2 and keys.VSSI_record_size()==40 and keys.VSSI_start(nil)==-2)
+assert(keys.VSSI_version()==3 and keys.VSSI_record_size()==40 and keys.VSSI_start(nil)==-2)
 assert(#logs==2 and logs[1]:find('dependencies=System32',1,true))
 -- Changed embedded hash is not silently used as a cache filename.
 local bad={size=transport.size,hex=transport.hex,sha256=string.rep('0',64)}

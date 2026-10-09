@@ -7,6 +7,7 @@ function M.new(keys,api)
  local self={api=api,bindings={},codes={},previous={},focused=false}
  for _,map in pairs(keys) do for _,code in pairs(map) do if code~=0 then
   self.bindings[code]=true;self.codes[code%256]=true
+  for _,held in ipairs(api.chords and api.chords[code]or{})do self.codes[held]=true end
  end end end
  for _,g in ipairs(groups) do for _,c in pairs(g) do self.codes[c]=true end end
  for code in pairs(self.codes) do self.previous[code]=api.down(code) end
@@ -18,6 +19,7 @@ function M.new(keys,api)
    local key,mask=binding%256,math.floor(binding/256)
    if focused and self.focused and now[key] and not self.previous[key] then
     local match=true
+    for _,held in ipairs(self.api.chords and self.api.chords[binding]or{})do if not now[held]then match=false end end
     for i,g in ipairs(groups) do
      local want=mask%4;mask=math.floor(mask/4)
      if primary_group[key]~=i then

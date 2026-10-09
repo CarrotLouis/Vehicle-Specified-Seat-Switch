@@ -17,7 +17,7 @@ run(py+[str(R/'scripts/build.py')],record=False)
 for name in ['test_transaction.lua','test_probe.lua','test_owner_paths.lua','test_room.lua','test_room_sender.lua',
  'test_room_adapter.lua','test_owned_transaction.lua','test_acquired_release.lua','test_entrance.lua','test_sender.lua',
  'test_binding.lua','test_mounted_reader.lua','test_policy.lua','test_input.lua','test_config_controller.lua',
- 'test_snapshot.lua','test_config_storage.lua','test_solo_native.lua','test_transport.lua','test_native_library.lua','test_entry.lua','test_input_source.lua','test_mode_policy.lua','test_i18n.lua','test_performance_data.lua','test_optional_bindings.lua']:
+ 'test_snapshot.lua','test_config_storage.lua','test_solo_native.lua','test_transport.lua','test_native_library.lua','test_entry.lua','test_input_source.lua','test_input_gate.lua','test_mode_policy.lua','test_i18n.lua','test_performance_data.lua','test_optional_bindings.lua']:
     env=None
     if name=='test_transport.lua':
         fixture=R/'tests'/('transport-'+uuid.uuid4().hex);fixture.mkdir()
@@ -35,6 +35,7 @@ for source in ['installed','upstream']:
     fixture=R/'tests'/('menu-'+uuid.uuid4().hex);fixture.mkdir()
     env=os.environ.copy();env['VSS_MENU_SOURCE']=source;env['VSS_MENU_FIXTURE']=str(fixture)
     run(lua+[str(R/'tests/test_menus.lua')],env);checks[-1]['source']=source
+run(py+[str(R/'scripts/test_input_native.py')])
 for mode in [[],['error-stop'],['guard-change']]:
     run([str(B/'test_production_gate.exe'),*mode]);checks[-1]['mode']=mode
 assembly=json.loads((B/'assembly.json').read_text())

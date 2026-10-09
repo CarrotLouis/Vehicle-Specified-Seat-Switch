@@ -3,10 +3,10 @@ from pathlib import Path
 R=Path(__file__).resolve().parents[1]/'docs'
 manifest={'Version':1,'Guid':'caab3d07-e0b5-4998-98c9-92888a7e0f88',
  'Name':'Vehicle Specified Seat Switch / 载具指定座位切换',
- 'Description':'0.4.4：包含用于联机确认与按键协调的本地原生 DLL 辅助模块，源码和哈希随包提供。始终留在车内，用快捷键切换到指定空座。支持三辆 FRV、Bastion、Maelstrom 和任务油罐车。接入 ModOptionsMenu，游戏内热切换普通版／加强版、INI／菜单按键。普通版、INI为首次默认值。加强版支持单人及多人，仅使用者需要安装。\n\n0.4.4: includes local native DLL helpers for seat confirmations and input coordination, with sources and hashes provided. Stay aboard and switch to specified vacant seats. Supports three FRVs, Bastion, Maelstrom and the mission tanker. ModOptionsMenu selects Normal/Enhanced, independent INI/menu bindings in-game. Initial defaults: Normal and INI. Enhanced supports solo/multiplayer; only the user of the feature needs to install it.',
+ 'Description':'0.4.5：包含用于联机确认与按键协调的本地原生 DLL 辅助模块，哈希随包提供，源码见公开 GitHub 仓库。始终留在车内，用快捷键切换到指定空座。支持三辆 FRV、Bastion、Maelstrom 和任务油罐车。接入 ModOptionsMenu，游戏内热切换普通版／加强版、INI／菜单按键。普通版、INI为首次默认值。加强版支持单人及多人，仅使用者需要安装。\n\n0.4.5: includes local native DLL helpers for seat confirmations and input coordination, with hashes provided and source on GitHub. Stay aboard and switch to specified vacant seats. Supports three FRVs, Bastion, Maelstrom and the mission tanker. ModOptionsMenu selects Normal/Enhanced, independent INI/menu bindings in-game. Initial defaults: Normal and INI. Enhanced supports solo/multiplayer; only the user of the feature needs to install it.',
  'Options':[{'Name':'安装模组 / Install addon','Include':['Mod'],
  'Description':'统一安装包，包含两个本地原生 DLL 辅助模块；详见 SECURITY.md 和 SHA256SUMS.txt。在游戏内选择普通版或加强版。普通版保留原有座位分组；加强版允许跨区换座。需要 Bingus Shared Loader；需要 ModOptionsMenu，ModBindingsMenu 为可选依赖。\n\nUnified package with two local native DLL helpers; see SECURITY.md and SHA256SUMS.txt. Choose the variant in-game. Normal retains native seat groups; Enhanced allows cross-group switching. Requires Bingus Shared Loader; ModOptionsMenu is required; ModBindingsMenu is optional. '}]}
-zh=r'''Vehicle Specified Seat Switch 0.4.4
+zh=r'''Vehicle Specified Seat Switch 0.4.5
 
 留在载具内，按快捷键切换到指定空座。已被队友占用或预留的座位不可切换。
 支持 M-102 Gunner FRV、M-103 Supply FRV、M-104 Incinerator FRV、TD-220 Bastion MK XVI、TD-110 Maelstrom 和特殊任务油罐车。
@@ -35,7 +35,7 @@ ModOptionsMenu 为本版必需依赖。未安装 ModBindingsMenu 时，按键策
 
 自定义按键：两套配置独立
 INI：%APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini
-首次初始化自动生成。保留已有设置，支持键盘、五个鼠标键及组合键，如 CTRL+1、SHIFT+Q。
+首次初始化自动生成。保留已有设置，支持键盘、五个鼠标键及自由组合，如 CTRL+1、Q+E、MOUSE4+W。按住前面的键，再按最后一个键。
 修改 INI 后重启游戏读取；游戏内切换“按键策略”无需重启，也不会改写文件。
 完整键名及限制见 KEYS_按键清单.txt / KEYS_English.txt。
 
@@ -73,7 +73,7 @@ INI 默认键位／座位范围
 原生辅助模块
 本模组使用两个本地 DLL，处理联机换座确认与游戏窗口内的换座按键。它们来自本 ZIP 内嵌数据，运行时校验后缓存到：
 %LOCALAPPDATA%\CowboyBingus\Helldivers2\VehicleSeatSwitch\Native
-ZIP 的 Native/ 目录提供同样的 DLL，源码和哈希清单随包附带。DLL 未签名；详细用途和校验方式见 SECURITY.md。关闭游戏后可删除缓存，下次需要时会重新生成。
+ZIP 的 Native/ 目录提供同样的 DLL，哈希清单随包附带，源码见 https://github.com/CarrotLouis/Vehicle-Specified-Seat-Switch。DLL 未签名；详细用途和校验方式见 SECURITY.md。关闭游戏后可删除缓存，下次需要时会重新生成。
 
 日志与反馈
 %LOCALAPPDATA%\CowboyBingus\Helldivers2\Logs\VehicleSeatSwitch.log
@@ -81,7 +81,7 @@ ZIP 的 Native/ 目录提供同样的 DLL，源码和哈希清单随包附带。
 反馈时附游戏版本、模组版本、普通／加强模式、按键策略、房主／客机、车型、复现步骤，以及以上相关日志。
 无需发送 GitHub 凭据或游戏整个内存转储。
 '''
-en=r'''Vehicle Specified Seat Switch 0.4.4
+en=r'''Vehicle Specified Seat Switch 0.4.5
 
 Stay aboard and switch to a specified vacant seat. Occupied or reserved seats remain unavailable.
 Supports M-102 Gunner, M-103 Supply and M-104 Incinerator FRVs, TD-220 Bastion MK XVI, TD-110 Maelstrom and the mission tanker.
@@ -110,7 +110,7 @@ Texts follow the game's Text Language. Bundled: English, Simplified/Traditional 
 
 Independent binding configurations
 INI: %APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini
-Created automatically, existing settings preserved. Supports keyboard, five mouse buttons and modifier chords such as CTRL+1 and SHIFT+Q.
+Created automatically, existing settings preserved. Supports free combinations of supported keyboard keys and five mouse buttons, such as CTRL+1, Q+E and MOUSE4+W. Hold preceding keys, then press the final key.
 Restart after editing the INI. Switching strategy in-game needs no restart and never rewrites either configuration.
 See KEYS_English.txt / KEYS_按键清单.txt for accepted names and restrictions.
 
@@ -148,7 +148,7 @@ No native input mapping is changed/saved by this addon. The release has no conti
 Native helpers
 Two local DLL helpers handle seat confirmations and selected inputs in the game window. They are embedded in this ZIP and verified before caching at:
 %LOCALAPPDATA%\CowboyBingus\Helldivers2\VehicleSeatSwitch\Native
-Native/ provides the same DLLs openly, with sources and hashes included. The DLLs are unsigned; see SECURITY.md for their purpose and verification. Close the game before deleting the cache; it is recreated when needed.
+Native/ provides the same DLLs openly, with hashes included. Source: https://github.com/CarrotLouis/Vehicle-Specified-Seat-Switch. The DLLs are unsigned; see SECURITY.md for their purpose and verification. Close the game before deleting the cache; it is recreated when needed.
 
 Logs and reports
 %LOCALAPPDATA%\CowboyBingus\Helldivers2\Logs\VehicleSeatSwitch.log
@@ -160,7 +160,7 @@ def write_docs():
     for n,text in [('README_中文.txt',zh),('README_English.txt',en)]:
         (R/n).write_text(text,encoding='utf-8',newline='\n')
     for n in ['KEYS_按键清单.txt','KEYS_English.txt']:
-        text=(R/n).read_text(encoding='utf-8').replace('0.3.0','0.4.4').replace('0.4.1','0.4.4').replace('0.4.2','0.4.4').replace('0.4.3','0.4.4')
+        text=(R/n).read_text(encoding='utf-8').replace('0.3.0','0.4.5').replace('0.4.1','0.4.5').replace('0.4.2','0.4.5').replace('0.4.3','0.4.5')
         footer='\n此清单仅适用于 VehicleSeatSwitch.ini；ModBindingsMenu 按游戏原生菜单允许的范围设置。\nThis list is for VehicleSeatSwitch.ini; ModBindingsMenu uses the native menu\'s supported range.\n'
         if not text.endswith(footer):text+=footer
         (R/n).write_text(text,encoding='utf-8',newline='\n')

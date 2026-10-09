@@ -1,4 +1,4 @@
-Vehicle Specified Seat Switch 0.4.4
+Vehicle Specified Seat Switch 0.4.5
 
 留在载具内，按快捷键切换到指定空座。已被队友占用或预留的座位不可切换。
 支持 M-102 Gunner FRV、M-103 Supply FRV、M-104 Incinerator FRV、TD-220 Bastion MK XVI、TD-110 Maelstrom 和特殊任务油罐车。
@@ -27,7 +27,7 @@ ModOptionsMenu 为本版必需依赖。未安装 ModBindingsMenu 时，按键策
 
 自定义按键：两套配置独立
 INI：%APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini
-首次初始化自动生成。保留已有设置，支持键盘、五个鼠标键及组合键，如 CTRL+1、SHIFT+Q。
+首次初始化自动生成。保留已有设置，支持键盘、五个鼠标键及自由组合，如 CTRL+1、Q+E、MOUSE4+W。按住前面的键，再按最后一个键。
 修改 INI 后重启游戏读取；游戏内切换“按键策略”无需重启，也不会改写文件。
 完整键名及限制见 KEYS_按键清单.txt / KEYS_English.txt。
 
@@ -65,7 +65,7 @@ INI 默认键位／座位范围
 原生辅助模块
 本模组使用两个本地 DLL，处理联机换座确认与游戏窗口内的换座按键。它们来自本 ZIP 内嵌数据，运行时校验后缓存到：
 %LOCALAPPDATA%\CowboyBingus\Helldivers2\VehicleSeatSwitch\Native
-ZIP 的 Native/ 目录提供同样的 DLL，源码和哈希清单随包附带。DLL 未签名；详细用途和校验方式见 SECURITY.md。关闭游戏后可删除缓存，下次需要时会重新生成。
+ZIP 的 Native/ 目录提供同样的 DLL，哈希清单随包附带，源码见 https://github.com/CarrotLouis/Vehicle-Specified-Seat-Switch。DLL 未签名；详细用途和校验方式见 SECURITY.md。关闭游戏后可删除缓存，下次需要时会重新生成。
 
 日志与反馈
 %LOCALAPPDATA%\CowboyBingus\Helldivers2\Logs\VehicleSeatSwitch.log

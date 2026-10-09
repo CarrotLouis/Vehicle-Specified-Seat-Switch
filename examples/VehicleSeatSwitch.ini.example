@@ -1,8 +1,8 @@
 ; Vehicle Seat Switch — restart game after editing.
 ; Location: %APPDATA%/Arrowhead/Helldivers2/VehicleSeatSwitch.ini
 ; Keys: see KEYS_按键清单.txt in the mod ZIP. Defaults stay F1-F5.
-; Examples: CTRL+1, SHIFT+Q, CTRL+SHIFT+MOUSE4, RCTRL+NUMPAD1.
-; Press modifiers before the last key; extra modifiers do not match.
+; Examples: CTRL+1, MOUSE4+W, Q+E, CTRL+MOUSE4+Q.
+; Hold all preceding keys, then press the last key; extra modifiers do not match.
 ; NUMPAD0-NUMPAD9 require Num Lock ON. NONE disables a binding.
 ; F2/F3/F5 may also toggle game performance overlays. Change keys if needed.
 ; Example for M102: NUMPAD1, NUMPAD2, NUMPAD3, NUMPAD4, NUMPAD5.

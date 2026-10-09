@@ -1,4 +1,4 @@
-载具换座 0.4.4 — 按键与组合键清单
+载具换座 0.4.5 — 按键与组合键清单
 
 配置位置
 %APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini
@@ -6,16 +6,17 @@
 普通/加强版共用配置，默认仍是 F1–F5。
 
 组合键
-支持 Ctrl、Shift、Alt、Win 中的一个或多个修饰键，加一个主键。
-例：CTRL+1、SHIFT+Q、CTRL+SHIFT+Q、ALT+MOUSE4、RCTRL+NUMPAD1。
-最后一项必须是主键，前面的修饰键顺序不限；大小写不限，允许加号两侧有空格。
-先按住修饰键，再按主键；同一帧按下两者也可以。长按只触发一次。
-先按主键、后补修饰键不会触发，须松开并重新按主键。
+支持所有已支持键名的自由组合，可混合键盘和鼠标，不要求包含修饰键。
+例：CTRL+1、Q+E、MOUSE4+W、MOUSE4+MOUSE5、CTRL+MOUSE4+Q、MOUSE4+CTRL。
+最后一项必须是主键，前面的按键顺序不限；大小写不限，允许加号两侧有空格。
+先按住前面所有键，再按最后一个主键；同一帧按下两者也可以。长按只触发一次。
+先按主键、后补前置键不会触发，须松开并重新按主键。
 严格匹配修饰键：CTRL+1 不响应 CTRL+SHIFT+1，单独 1 不响应 CTRL+1。
 因此默认 F1–F5 在额外按着 Ctrl/Shift/Alt/Win 时也不会触发。
 CTRL、SHIFT、ALT、WIN 表示任意一侧；L/R 前缀指定左/右侧。
 指定一侧时，同时按住两侧不会匹配该单侧组合。
 切回游戏、关闭带光标菜单时不会补触发已按住的键；松开后再按。
+没有五键上限；解析器最多接受 255 项，足以覆盖全部受支持的不重复键名。额外普通键不影响匹配，额外修饰键仍需明确写入配置。
 
 合法主键名称（以下名称直接写在等号右侧；不要写键帽符号）
 
@@ -42,7 +43,7 @@ SHIFT LSHIFT RSHIFT
 ALT LALT RALT
 LWIN RWIN
 WIN 仅作为组合键前缀，单独 Windows 键请写 LWIN 或 RWIN。
-组合的最后一项不能再是修饰键；CTRL+SHIFT 这类纯修饰键组合不支持。
+修饰键也可以放在最后触发，例如 MOUSE4+CTRL、CTRL+SHIFT。不能重复同一个键或修饰键组，例如 W+W、CTRL+LCTRL+1。
 
 标点键（按常见美式/中文键盘键帽对应；其他布局可能不同）
 BACKQUOTE      ` ~
@@ -108,7 +109,7 @@ NONE
 同一车型允许多个 NONE。
 
 冲突规则
-同一车型不能把相同或重叠的绑定分配给多个座位。例如 CTRL+1 与 LCTRL+1 重叠。
+同一车型不能把完全相同的绑定分配给多个座位。传统修饰键组合保留原有重叠检查，例如 CTRL+1 与 LCTRL+1；自由组合不因重叠而拒绝，请自行安排。
 1 与 CTRL+1 可以分开绑定，LCTRL+1 与 RCTRL+1 也可以。
 单独 CTRL 与 CTRL+1 不可分配给不同座位，否则先按 Ctrl 就会提前触发。
 存在重复或上述重叠时，该车型整组恢复默认键，日志记录原因。
@@ -119,17 +120,17 @@ NONE
 覆盖 Windows 能报告的标准全尺寸键盘按键和五个标准鼠标按钮。
 Fn、灯光/宏层切换、部分电源键等由固件处理的功能，若不向 Windows 发送标准键值，模组无法直接识别。
 Win 组合键、Alt+Tab、Ctrl+Alt+Delete 等仍受系统处理，不能保证可用于游戏内换座。
-模组只读取按键，不吞掉游戏或系统原本的快捷键。选择与游戏操作无冲突的绑定。
+新增功能负责识别组合，不解决原生操作冲突；普通前置键仍会传给游戏。既有联机按键优先处理和松键／坐稳检查保留，若换座等待，请释放有冲突的游戏操作。
 Pause、PrintScreen、媒体键等在某些设备/驱动上可能只产生极短信号，逐帧检测可能错过，需在本机实测。
 当前通过离线模拟验证组合键逻辑；尚未替代你的实际键盘、鼠标和游戏内验证。
 
 M-102 示例（替换配置中的同名节，不要重复追加同名键）
 [m102]
-driver=CTRL+1
-front_passenger=CTRL+2
-rear_left=CTRL+3
-rear_right=CTRL+4
-gunner=CTRL+MOUSE4
+driver=MOUSE4+W
+front_passenger=MOUSE4+S
+rear_left=MOUSE4+A
+rear_right=MOUSE4+D
+gunner=MOUSE4+F
 
 资料：Microsoft Virtual-Key Codes / GetAsyncKeyState
 https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes

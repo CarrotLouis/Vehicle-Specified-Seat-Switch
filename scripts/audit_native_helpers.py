@@ -22,5 +22,5 @@ for kind,file,allowed in [('VSSTransport',B/'vss_transport.dll',{'kernel32.dll',
     assert int.from_bytes(body[pe+24+16:pe+24+20],'little')==0,'helpers have no DllMain entry point'
     rows.append({'kind':kind,'filename':kind+'-'+digest+'.dll','bytes':len(body),'sha256':digest,'imports':imports,
                  'unsigned':True,'entry_point':0,'source':('native/native.c + native/gate.c + native/bridge.S')if kind=='VSSTransport'else'native/input_native.c'})
-(B/'native-helpers.json').write_text(json.dumps({'helpers':rows},indent=2))
+(B/'native-helpers.json').write_text(json.dumps({'source_repository':'https://github.com/CarrotLouis/Vehicle-Specified-Seat-Switch','helpers':rows},indent=2))
 print(json.dumps(rows,indent=2))

@@ -16,6 +16,7 @@ local real_dispatcher=module('dispatcher')
 local now,clock_frames=0,0
 local enhanced,fail_compat,mission,count=false,false,false,1
 local pressed={}
+local custom_keys
 local reads,network_steps,solo_direct,native_calls,trace_starts,trace_stops,poll_count,original_calls=0,0,0,0,0,0,0,0
 local gate_pulses=0;local inject_fault=false
 local function seat(node)
@@ -51,7 +52,7 @@ local env=setmetatable({
  normal_compat_spec={},compat_spec={},module_hash=function()return 'unused'end,
  normal_compat={start=function()return {step=function()return {functions={},tables={},capabilities={normal=true,enhanced=false}}end}end},
  compat={start=function()return {step=function()if fail_compat then error('simulated_unknown_optional_interface')end;return {functions={},tables={},capabilities={normal=true,enhanced=enhanced}}end}end},
- config={load=function()return config.parse(config.template()),{},'fixture/VehicleSeatSwitch.ini','existing'end},
+ config={chords=config.chords,load=function()return config.parse(custom_keys or config.template()),{},'fixture/VehicleSeatSwitch.ini','existing'end},
  platform=function()return api end,pages=function(a)return a end,
  sampler={new=function()return {capture=function()return {state=mission and 'mission'or'not_in_mission'}end}end},
  transport=function()
@@ -166,7 +167,7 @@ assert(bundle:sub(-#source)==source)
 local bridge='\n';for _,name in ipairs(substitutions)do bridge=bridge..name..'=__fixture.'..name..'\n'end
 env.__fixture=env;enhanced=true;mission=false;count=1;options[prefix..'mode']=1
 restart(bundle:sub(1,#bundle-#source)..bridge..source);tick(610)
-assert(VehicleSeatSwitch.version=='0.4.4'and VehicleSeatSwitch.transport_ready,tostring(VehicleSeatSwitch.error))
+assert(VehicleSeatSwitch.version=='0.4.5'and VehicleSeatSwitch.transport_ready,tostring(VehicleSeatSwitch.error))
 assert(env.shutdown()=='shutdown_forwarded')
 print('PASS exact unified archive prefix with real menu/input modules and declared engine doubles')
 
@@ -193,3 +194,14 @@ assert(VehicleSeatSwitch.input_strategy=='ini');tap(112);assert(shared_snapshot.
 ModBindingsMenu=mbm;tick(6);assert(VehicleSeatSwitch.input_strategy=='menu')
 env.shutdown()
 print('PASS required MOM waits without input; absent optional MBM forces INI despite saved menu choice; delayed dependencies resume')
+
+-- Exercise the actual entry's descriptor wiring and the shipped bundle with
+-- keyboard+mouse chords. Native game effects remain the same declared doubles.
+custom_keys='[m102]\ndriver=MOUSE4+W\nfront_passenger=MOUSE4+S\nrear_left=MOUSE4+A\nrear_right=MOUSE4+D\ngunner=MOUSE4+F\n'
+mission=false;count=1;options[prefix..'mode']=2;options[prefix..'strategy']=1
+restart(bundle:sub(1,#bundle-#source)..bridge..source);tick(610);mission=true;seat(1);tick(6)
+pressed[5]=true;tick(2);tap(70);assert(shared_snapshot.node==4,'Bundled free chord failed')
+tap(83);assert(shared_snapshot.node==1,'Bundled free chord return failed')
+pressed[5]=nil;tap(70);assert(shared_snapshot.node==1,'Missing prerequisite triggered a seat')
+env.shutdown();custom_keys=nil
+print('PASS exact bundled entry connects parsed free-chord descriptors to the real input/controller path')

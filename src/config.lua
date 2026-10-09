@@ -1,4 +1,5 @@
-local M={}
+local M={chords={}}
+local chord_codes={};local next_chord=0
 M.defaults={
  m102={driver='F1',front_passenger='F2',rear_left='F3',rear_right='F4',gunner='F5'},
  m103={driver='F1',front_passenger='F2',rear_left='F3',rear_right='F4'},
@@ -9,6 +10,8 @@ M.defaults={
 }
 -- Windows virtual keys. Modifier requirements occupy four base-4 digits above
 -- the low byte: Shift, Ctrl, Alt, Win; 0=absent, 1=either, 2=left, 3=right.
+-- Ordinary prerequisites live in a bounded descriptor table; upper 16 bits
+-- identify an interned chord, while the low 16 bits retain the legacy encoding.
 M.names={
  MOUSE1=1,MOUSE2=2,MOUSE3=4,MOUSE4=5,MOUSE5=6,
  LBUTTON=1,RBUTTON=2,MBUTTON=4,XBUTTON1=5,XBUTTON2=6,
@@ -50,17 +53,36 @@ function M.key(value)
  local parts={};for p in (value..'+'):gmatch('(.-)%+') do
   p=p:match('^%s*(.-)%s*$');if p=='' then return nil end;parts[#parts+1]=p
  end
- if #parts<2 or #parts>5 then return nil end
- local primary=single(parts[#parts]);if not primary or modifiers[parts[#parts]] then return nil end
- local mask,seen=0,{}
+ if #parts<2 or #parts>255 then return nil end
+ local primary=single(parts[#parts]);if not primary then return nil end
+ local mask,seen,held=0,{},{}
+ local last_modifier=modifiers[parts[#parts]]
+ if last_modifier then seen[last_modifier[1]]=true end
  for i=1,#parts-1 do
-  local m=modifiers[parts[i]];if not m or seen[m[1]] then return nil end
-  seen[m[1]]=true;mask=mask+m[2]*4^(m[1]-1)
+  local m=modifiers[parts[i]]
+  if m then
+   if seen[m[1]]then return nil end
+   seen[m[1]]=true;mask=mask+m[2]*4^(m[1]-1)
+  else
+   local key=single(parts[i]);if not key or key==primary or held[key]then return nil end
+   held[key]=true
+  end
  end
- return primary+256*mask
+ local sorted={};for key in pairs(held)do sorted[#sorted+1]=key end;table.sort(sorted)
+ local code=primary+256*mask
+ if #sorted==0 then return code end
+ local identity=tostring(code)..':'..table.concat(sorted,',')
+ if chord_codes[identity]then return chord_codes[identity]end
+ assert(next_chord<65535,'Too many distinct chord definitions')
+ next_chord=next_chord+1;code=code+next_chord*65536
+ chord_codes[identity]=code;M.chords[code]=sorted
+ return code
 end
 function M.overlap(a,b)
  if a==0 or b==0 then return false end
+ -- Free chords may overlap: users own those choices. Exact duplicates still
+ -- cannot identify a unique seat. Existing modifier-only validation is retained.
+ if M.chords[a]or M.chords[b]then return a==b end
  if a%256~=b%256 then
   local sides={ [16]={1,1},[160]={1,2},[161]={1,3},[17]={2,1},[162]={2,2},[163]={2,3},
    [18]={3,1},[164]={3,2},[165]={3,3},[91]={4,2},[92]={4,3} }
@@ -119,8 +141,8 @@ function M.template()
  local rows={'; Vehicle Seat Switch — restart game after editing.',
  '; Location: %APPDATA%/Arrowhead/Helldivers2/VehicleSeatSwitch.ini',
  '; Keys: see KEYS_按键清单.txt in the mod ZIP. Defaults stay F1-F5.',
- '; Examples: CTRL+1, SHIFT+Q, CTRL+SHIFT+MOUSE4, RCTRL+NUMPAD1.',
- '; Press modifiers before the last key; extra modifiers do not match.',
+ '; Examples: CTRL+1, MOUSE4+W, Q+E, CTRL+MOUSE4+Q.',
+ '; Hold all preceding keys, then press the last key; extra modifiers do not match.',
  '; NUMPAD0-NUMPAD9 require Num Lock ON. NONE disables a binding.',
  '; F2/F3/F5 may also toggle game performance overlays. Change keys if needed.',
  '; Example for M102: NUMPAD1, NUMPAD2, NUMPAD3, NUMPAD4, NUMPAD5.',

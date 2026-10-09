@@ -3,9 +3,9 @@ from pathlib import Path
 import hashlib,json,struct,sys,zipfile
 from archive_format import resource_hash,ARCHIVE,TYPE
 R=Path(__file__).resolve().parents[1];B=R/'build';D=R/'docs'
-zpath=R.parent/'outputs/Vehicle-Specified-Seat-Switch-0.4.4.zip'
+zpath=R.parent/'outputs/Vehicle-Specified-Seat-Switch-0.4.5.zip'
 package=json.loads((B/'package.json').read_text())
-checks=json.loads((B/'tests-passed.json').read_text());assert len(checks['checks'])==35
+checks=json.loads((B/'tests-passed.json').read_text());assert len(checks['checks'])==37
 assembly=json.loads((B/'assembly.json').read_text())
 with zipfile.ZipFile(zpath)as z:
     assert z.testzip()is None
@@ -21,14 +21,11 @@ with zipfile.ZipFile(zpath)as z:
     assert entry[:2]==(resource_hash('mods/vehicle_seat_tools/vehicle_seat_switch'),TYPE)
     body=archive[entry[2]:entry[2]+entry[7]];size,version=struct.unpack_from('<II',body)
     runtime=body[8:];assert version==2 and size==len(runtime)
-    assert runtime==(B/'bundled_full.lua').read_bytes()==z.read('Source/full.lua')
+    assert runtime==(B/'bundled_full.lua').read_bytes()
     assert hashlib.sha256(runtime).hexdigest()==checks['bundles']['full']==package['bundles']['full']
-    assert z.read('Source/validation.json')==(B/'tests-passed.json').read_bytes()
-    assert z.read('Source/assembly.json')==(B/'assembly.json').read_bytes()
     for n in ['README_中文.txt','README_English.txt','KEYS_按键清单.txt','KEYS_English.txt']:
         assert z.read(n)==(D/n).read_bytes()
     assert z.read('VehicleSeatSwitch.ini.example')==(R/'examples/VehicleSeatSwitch.ini.example').read_bytes()
-    assert z.read('Source/entry.lua')==(R/'src/entry.lua').read_bytes()
     assert z.read('SECURITY.md')==(R/'SECURITY.md').read_bytes()
     native=json.loads(z.read('NATIVE_HELPERS.json'))['helpers'];assert len(native)==2
     for row in native:
@@ -42,15 +39,11 @@ with zipfile.ZipFile(zpath)as z:
         # retain and check the exact local bytes below.
         canonical=(R/relative).read_text(encoding='utf-8').encode('utf-8')
         assert hashlib.sha256(canonical).hexdigest()==digest,relative
-        if relative.startswith('src/'):
-            assert z.read('Source/modules/'+Path(relative).name)==source
     assert b"mode='normal'"in runtime and b"strategy='ini'"in runtime
     assert b'api.native_binding_source'in runtime and b'required_ModOptionsMenu_missing'in runtime
     assert b'block_perf_data'in runtime and b'performance_data_unavailable'in runtime
-    assert b'VSS_NO_RECORDS'in z.read('Source/transport/native.c')
-    for name in ['native.c','gate.c','bridge.S','watched.h','test_production_gate.c']:
-        assert z.read('Source/transport/'+name)==(R/'native'/name).read_bytes()
-    assert z.read('Source/transport/vss_transport.dll')==(B/'vss_transport.dll').read_bytes()
+    assert b'VSS_NO_RECORDS'in (R/'native/native.c').read_bytes()
+    assert not any(n.startswith('Source/')for n in z.namelist())
     for bad in ['VSSMenu_VirtualProtect','VSSMenu_WriteProcessMemory','four_profiler_checks_only','performance_block_on','VehicleSeatIntegrated-','fixed two-player path','camera/private-pose observer']:
         assert bad.encode()not in runtime
     forbidden={'performance.lua','code_byte.lua','performance_spec.lua'}

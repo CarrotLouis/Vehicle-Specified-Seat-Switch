@@ -1,4 +1,4 @@
-Vehicle Specified Seat Switch 0.4.4
+Vehicle Specified Seat Switch 0.4.5
 
 Stay aboard and switch to a specified vacant seat. Occupied or reserved seats remain unavailable.
 Supports M-102 Gunner, M-103 Supply and M-104 Incinerator FRVs, TD-220 Bastion MK XVI, TD-110 Maelstrom and the mission tanker.
@@ -27,7 +27,7 @@ Texts follow the game's Text Language. Bundled: English, Simplified/Traditional 
 
 Independent binding configurations
 INI: %APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini
-Created automatically, existing settings preserved. Supports keyboard, five mouse buttons and modifier chords such as CTRL+1 and SHIFT+Q.
+Created automatically, existing settings preserved. Supports free combinations of supported keyboard keys and five mouse buttons, such as CTRL+1, Q+E and MOUSE4+W. Hold preceding keys, then press the final key.
 Restart after editing the INI. Switching strategy in-game needs no restart and never rewrites either configuration.
 See KEYS_English.txt / KEYS_按键清单.txt for accepted names and restrictions.
 
@@ -65,7 +65,7 @@ No native input mapping is changed/saved by this addon. The release has no conti
 Native helpers
 Two local DLL helpers handle seat confirmations and selected inputs in the game window. They are embedded in this ZIP and verified before caching at:
 %LOCALAPPDATA%\CowboyBingus\Helldivers2\VehicleSeatSwitch\Native
-Native/ provides the same DLLs openly, with sources and hashes included. The DLLs are unsigned; see SECURITY.md for their purpose and verification. Close the game before deleting the cache; it is recreated when needed.
+Native/ provides the same DLLs openly, with hashes included. Source: https://github.com/CarrotLouis/Vehicle-Specified-Seat-Switch. The DLLs are unsigned; see SECURITY.md for their purpose and verification. Close the game before deleting the cache; it is recreated when needed.
 
 Logs and reports
 %LOCALAPPDATA%\CowboyBingus\Helldivers2\Logs\VehicleSeatSwitch.log

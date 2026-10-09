@@ -4,9 +4,11 @@
 
 《绝地潜兵 2》载具指定座位切换模组：保持在车内，用自定义按键切换到指定空座。目标被队友占用或预留时拒绝切换。加强版支持单人和多人，使用者可以是房主或客机，其他队友无需安装。
 
+INI 支持已支持键名的自由组合，包括 `MOUSE4+W`、`Q+E`、`CTRL+MOUSE4+Q`。按住前面的键，再按最后一个键；修改后重启游戏。原生操作冲突由用户自行安排。
+
 ## 安装与配置
 
-当前修订为 **0.4.4**，使用统一安装包。
+当前修订为 **0.4.5**，使用统一安装包。
 
 1. 退出游戏，启用 [Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader) v18 或以上及必需的 [ModOptionsMenu](https://github.com/CowboyBingus/ModOptionsMenu)。
 2. 按需启用 [ModBindingsMenu](https://github.com/CowboyBingus/ModBindingsMenu)，每个菜单只安装一份。
@@ -37,7 +39,7 @@ ModBindingsMenu 当前公开接口使自动分配的动作初始未绑定，请�
 
 ## 原生辅助模块
 
-本模组包含两个未签名的原生 DLL，处理联机换座确认和游戏窗口内的指定换座输入。它们从 ZIP 内嵌数据释放，校验后缓存到 `%LOCALAPPDATA%\CowboyBingus\Helldivers2\VehicleSeatSwitch\Native`。安装包提供对应 DLL、源码和 SHA-256 清单；用途、校验及信任边界见 [SECURITY.md](SECURITY.md)。
+本模组包含两个未签名的原生 DLL，处理联机换座确认和游戏窗口内的指定换座输入。它们从 ZIP 内嵌数据释放，校验后缓存到 `%LOCALAPPDATA%\CowboyBingus\Helldivers2\VehicleSeatSwitch\Native`。安装包提供对应 DLL 和 SHA-256 清单，源码在本仓库公开；用途、校验及信任边界见 [SECURITY.md](SECURITY.md)。
 
 ## 工程目录
 
@@ -66,7 +68,7 @@ python -X utf8 work/scripts/build_input_native.py
 python -X utf8 work/scripts/audit_native_helpers.py
 python -X utf8 work/scripts/validate.py
 python -X utf8 work/scripts/build.py --package
-node work/scripts/test_arsenal.cjs outputs/Vehicle-Specified-Seat-Switch-0.4.4.zip
+node work/scripts/test_arsenal.cjs outputs/Vehicle-Specified-Seat-Switch-0.4.5.zip
 python -X utf8 work/scripts/verify_artifact.py <Arsenal 检查打印的 result.json 路径>
 ```
 

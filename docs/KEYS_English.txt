@@ -1,15 +1,15 @@
-Vehicle Specified Seat Switch 0.4.4 — Keys and combinations
+Vehicle Specified Seat Switch 0.4.5 — Keys and combinations
 
 CONFIGURATION
 %APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini
 Created on first launch; existing settings are preserved. Both variants share it. Edit, save and restart the game. Defaults remain F1–F5.
 
 COMBINATIONS
-Use one or more distinct Ctrl, Shift, Alt or Win modifier groups followed by ONE primary key.
-Examples: CTRL+1, SHIFT+Q, CTRL+SHIFT+Q, ALT+MOUSE4, RCTRL+NUMPAD1.
-Case is ignored; spaces around + are allowed. Modifier order is flexible, but the primary key must be last.
-Hold the modifier first, then press the primary key. Pressing both in the same frame also works. Holding a binding does not repeat.
-Pressing the primary key before adding a modifier does not trigger: release and press the primary key again.
+Combine any supported keyboard keys and mouse buttons. No modifier is required. Repeated keys or repeated modifier groups are invalid.
+Examples: CTRL+1, Q+E, MOUSE4+W, MOUSE4+MOUSE5, CTRL+MOUSE4+Q, MOUSE4+CTRL.
+Case is ignored; spaces around + are allowed. Preceding key order is flexible; the final key is the trigger.
+Hold all preceding keys, then press the final key. Pressing both in the same frame also works. Holding a binding does not repeat.
+Pressing the primary key before adding a prerequisite does not trigger: release and press the primary key again.
 Modifiers match exactly: CTRL+1 does not match CTRL+SHIFT+1; plain 1 does not match CTRL+1. Default F1–F5 likewise do not trigger while extra modifiers are held.
 CTRL, SHIFT, ALT and WIN accept either side. L/R variants require that side; holding both sides does not match a single-side binding.
 Already-held keys do not trigger when returning to the game or closing a cursor menu; release and press again.
@@ -47,11 +47,12 @@ LBUTTON=MOUSE1 RBUTTON=MOUSE2 MBUTTON=MOUSE3 XBUTTON1=MOUSE4 XBUTTON2=MOUSE5
 
 DISABLING AND CONFLICTS
 NONE disables a seat binding. Multiple NONE entries per vehicle are allowed.
-Unsupported combinations include two ordinary keys (Q+E), modifiers only (CTRL+SHIFT), repeated modifier groups (CTRL+LCTRL+1), and CTRL+NONE.
-Bindings in the same vehicle must not overlap. CTRL+1 and LCTRL+1 overlap. Plain 1 and CTRL+1 are allowed; LCTRL+1 and RCTRL+1 are allowed.
+Unsupported combinations include repeated keys (W+W), repeated modifier groups (CTRL+LCTRL+1), and CTRL+NONE. Pure modifier chords such as CTRL+SHIFT are supported.
+Exact duplicate bindings are invalid. Legacy modifier-only bindings retain overlap checks. Free chords are not rejected for overlapping other bindings; choose them carefully. CTRL+1 and LCTRL+1 overlap. Plain 1 and CTRL+1 are allowed; LCTRL+1 and RCTRL+1 are allowed.
 Standalone CTRL and CTRL+1 cannot target different seats: pressing Ctrl would trigger too early.
 Duplicate/overlapping bindings restore the entire vehicle's defaults and log the reason. Invalid key names do not replace the previous value; missing settings use defaults.
-Two seat bindings triggered in the same frame are rejected.
+Two seat bindings triggered in the same frame are rejected. Ordinary prerequisite keys remain game inputs: this feature recognizes chords, it does not resolve gameplay conflicts. Existing release/settle checks still apply; release conflicting controls if a multiplayer switch waits.
+There is no five-key limit. The parser bounds input at 255 tokens, covering all supported distinct keys. Unrelated ordinary keys do not prevent a match; additional Ctrl/Shift/Alt/Win groups still do.
 
 LIMITATIONS
 Fn, lighting/macro-layer keys and firmware-only buttons are unavailable unless they send a supported Windows key signal.
@@ -61,11 +62,11 @@ Pause, PrintScreen and some media buttons may emit signals too brief for frame p
 
 EXAMPLE — replace the existing section, do not append duplicate keys
 [m102]
-driver=CTRL+1
-front_passenger=CTRL+2
-rear_left=CTRL+3
-rear_right=CTRL+4
-gunner=CTRL+MOUSE4
+driver=MOUSE4+W
+front_passenger=MOUSE4+S
+rear_left=MOUSE4+A
+rear_right=MOUSE4+D
+gunner=MOUSE4+F
 
 Reference: https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 

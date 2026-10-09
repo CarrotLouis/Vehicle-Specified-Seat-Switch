@@ -6,9 +6,9 @@
 #include <string.h>
 #define EXPORT __declspec(dllexport)
 #define CAPACITY 256
-typedef struct {uint32_t binding,target;} Item;
+typedef struct {uint32_t binding,target,held_count,held[255];} Item;
 typedef struct {uint64_t sequence,tick,generation;uint32_t binding,source,target,message;} Record;
-typedef char record_layout[sizeof(Record)==40?1:-1];
+typedef char record_layout[sizeof(Record)==40&&sizeof(Item)==1032?1:-1];
 static SRWLOCK lock=SRWLOCK_INIT;
 static HWND window;static WNDPROC previous;
 static volatile LONG installed,enabled;static uint64_t expires,serial,head,tail,generation;
@@ -53,8 +53,9 @@ static int group(uint32_t k){
  if(k==VK_MENU||k==VK_LMENU||k==VK_RMENU)return 2;
  if(k==VK_LWIN||k==VK_RWIN)return 3;return -1;
 }
-static int match(uint32_t binding,uint32_t key){
- uint32_t primary=binding%256,mask=binding/256;
+static int match(const Item *item,uint32_t key){
+ uint32_t binding=item->binding;
+ uint32_t primary=binding%256,mask=(binding/256)%256;
  if(primary!=key&&!(primary==VK_SHIFT&&group(key)==0)&&
     !(primary==VK_CONTROL&&group(key)==1)&&!(primary==VK_MENU&&group(key)==2))return 0;
  const uint32_t generic[4]={VK_SHIFT,VK_CONTROL,VK_MENU,0};
@@ -65,6 +66,7 @@ static int match(uint32_t binding,uint32_t key){
   uint32_t want=mask%4;int l=down(left[i]),r=down(right[i]),any=l||r||(generic[i]&&down(generic[i]));
   if((want==0&&any)||(want==1&&!any)||(want==2&&(!l||r))||(want==3&&(!r||l)))return 0;
  }
+ for(uint32_t i=0;i<item->held_count;i++)if(!down(item->held[i]))return 0;
  return 1;
 }
 static uint32_t keyboard_key(WPARAM w,LPARAM l){
@@ -97,7 +99,7 @@ static int consume(UINT msg,WPARAM w,LPARAM l){
  if(blocked[key]){if(up)blocked[key]=0;return 1;}
  if(up||repeat||!enabled||!allowed()||now_ms()>expires)return 0;
  int found=-1;
- for(uint32_t i=0;i<count;i++)if(items[i].target!=source&&match(items[i].binding,key)){
+ for(uint32_t i=0;i<count;i++)if(items[i].target!=source&&match(&items[i],key)){
   if(found>=0)return 0;found=(int)i;
  }
  if(found<0)return 0;
@@ -189,7 +191,7 @@ static int begin_request(HWND h,DWORD thread,int operation){
  }
  return 1;
 }
-EXPORT uint32_t VSSI_version(void){return 2;}
+EXPORT uint32_t VSSI_version(void){return 3;}
 EXPORT uint32_t VSSI_record_size(void){return sizeof(Record);}
 EXPORT uint32_t VSSI_dropped(void){return (uint32_t)InterlockedCompareExchange(&dropped,0,0);}
 EXPORT int VSSI_start(HWND h){
@@ -220,7 +222,9 @@ EXPORT int VSSI_status(void){
 EXPORT int VSSI_arm(const Item *input,uint32_t n,uint32_t seat,uint64_t until,uint64_t gen){
  if(!installed||!enabled||n>5||seat>4||(n&&!input)||until>now_ms()+300)return -1;
  for(uint32_t i=0;i<n;i++){
-  if(input[i].binding%256==0||input[i].binding%256==255||input[i].binding>65535||input[i].target>4)return -2;
+  if(input[i].binding%256==0||input[i].binding%256==255||input[i].target>4||input[i].held_count>255)return -2;
+  for(uint32_t j=0;j<input[i].held_count;j++)
+   if(!input[i].held[j]||input[i].held[j]>=255||input[i].held[j]==input[i].binding%256||group(input[i].held[j])>=0)return -2;
   for(uint32_t j=0;j<i;j++)if(input[i].binding==input[j].binding)return -3;
  }
  AcquireSRWLockExclusive(&lock);count=n;source=seat;expires=until;generation=gen;

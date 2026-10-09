@@ -1,38 +1,32 @@
-# 0.4.4 checkpoint — 2026-10-08
+# 0.4.5 checkpoint — 2026-10-10
 
-## Current scope
+## Request and scope
 
-User reports concern about an extracted VSSTransport-<SHA256>.dll in the loader Logs directory. The naming pattern comes from this addon. Local cached transport/input files match the embedded shipped helpers exactly. Inspection found expected own-process/window behavior and system-only imports; this is not an independent malware audit or publisher signature.
+User requested non-modifier chords such as MOUSE4+W/S/A/D/F. During implementation the user explicitly narrowed scope to recognition only: gameplay input conflicts are the user's responsibility. Do not add prefix suppression, gameplay quiet-check exemptions or special driver-key cleanup for these chords.
 
-Revision 0.4.4 keeps the two native binaries unchanged, moves extraction into %LOCALAPPDATA%/CowboyBingus/Helldivers2/VehicleSeatSwitch/Native, and adds explicit installer/player disclosure, SECURITY.md, visible Native/ binaries, SHA256SUMS.txt and NATIVE_HELPERS.json. The ZIP does not deploy those inspection copies into game bin; Arsenal still deploys three addon patch files. No online download, administrator prompt, antivirus exception, new process launch or system startup registration was added. Existing old cache files were not deleted.
+src/config.lua now interns free chords in a descriptor table. The low 16 bits preserve legacy primary/modifier encoding, the upper 16 bits identify the canonical ordinary-key prerequisite set. All existing supported keyboard/mouse names can be ordinary prerequisites; final key is the down-edge trigger. Preceding order and aliases normalize; case/whitespace insensitive. No five-key limit (bounded 255 tokens, sufficient for the supported unique names). Repeated keys and duplicate modifier groups remain invalid; WIN is prefix-only, Fn/wheel/firmware-only inputs remain unsupported. Extra modifier groups do not match; unrelated ordinary keys are allowed. Exact duplicate bindings still restore vehicle defaults; free chords are not rejected merely for overlap, but simultaneous seat triggers are refused. Legacy modifier-only overlap checks remain.
 
-Unified option, required ModOptionsMenu, optional ModBindingsMenu, independent INI/menu keys, resident Enhanced and Normal permissions remain. Player introductions describe current functions only. User manages changelogs, Known Issues and Releases. The 0.4.3 monitor collision fix is retained but its exact live test has not been reported yet.
+api.chords connects parsed descriptors to the actual poller and native gate. Only configured keys plus existing modifier groups are polled. No process-memory scan, background capture or new file category is added. Configuration defaults remain F1-F5 and existing user INIs remain untouched. This extension is for INI only; ModBindingsMenu scope is unchanged.
 
-## Loader changes
+## Native integration
 
-src/native_library.lua is the common loader used by transport.lua and input_gate.lua. It verifies the embedded SHA-256, bounds the payload, validates cached file size and exact bytes, rejects final-file reparse points, and holds a read-sharing-only file handle through load. Unicode Windows IO supports non-ASCII usernames. LoadLibraryExW uses a full path and LOAD_LIBRARY_SEARCH_SYSTEM32; exported functions are obtained directly from that handle, avoiding a second default-search ffi.load call. The loaded module path is checked. Mismatches refuse loading rather than overwriting or executing cache data. No process-wide DLL search settings change.
+Input helper ABI3 passes held_count + held[255] in each of at most five armed items. The native matcher validates ordinary prerequisites at message time, preserving 40-byte record IDs, source/generation/expiry checks and existing primary-key suppression. Prefix messages are forwarded untouched. Existing multiplayer release/quiet/occupancy/authority guards are unchanged; recognized chords can therefore wait for conflicting held gameplay controls to be released. Solo gameplay path and physics/seat transactions are unchanged.
 
-References remain for process lifetime because native callbacks can outlive Lua cleanup; native bridges already pin themselves on activation. Same-user compromised packages/accounts are outside the trust boundary. Helpers are unsigned; hashes bind known bytes but do not authenticate a publisher or arbitrary downloaded file.
+Input DLL: 11264 bytes, SHA-256 319aaaa11c5a7221da05c9779ffea1e6098a140cb8711caf05c6555bb0924cbd; imports Kernel32/MSVCRT/User32, entry point zero, unsigned. Exact rebuild verification passes. Transport unchanged: 16245 bytes, SHA-256 7c533e1b812b0be2cf58e418ac397d5025b3b71ebea8d41530a53a830534437f. Cache/loading guarantees from 0.4.4 remain. Updating creates one new input-helper cache filename; old files are not automatically deleted.
 
-## Audit and reproducibility
+## Packaging and evidence
 
-Transport: 16245 bytes, SHA-256 7c533e1b812b0be2cf58e418ac397d5025b3b71ebea8d41530a53a830534437f; static imports Kernel32/MSVCRT; ABI4; DllMain entry point zero. Release protocol recording is disabled. It synchronously matches the active own-seat confirmation and forwards other replies using existing game handlers.
+Per the preceding source-folder discussion, formal ZIP omits Source/. Public source, tests and build scripts remain on GitHub. Keep visible Native/, SECURITY.md, SHA256SUMS.txt and NATIVE_HELPERS.json with repository provenance. No changelog/history or validation caveats in player introductions. User manages Releases. Prior published ZIPs untouched; an undelivered 0.4.5 candidate was preserved under build/superseded before correcting its static-import disclosure.
 
-Input: 11264 bytes, SHA-256 2c1c290b4e869fbadd1cba4fdaa8d042731359d497d006287e12395c496e0e1b; static imports Kernel32/User32; ABI2; DllMain entry point zero. It validates own PID/window/thread before temporary own-thread WH_GETMESSAGE coordination and window-procedure attachment. Selected intents use a bounded memory queue, not a general persisted keyboard log.
+37 offline groups pass. Includes all five requested bindings, normalized aliases/order, final-modifier/long-chord matching, focus/hold/release protection, exact bundled entry wiring, native gate descriptors/lifecycle, and real compiled hidden-window plus separate GUI-thread tests. Native game/physics/network effects remain declared test doubles. New native helper cache loads/ABIs verified outside game. Isolated Arsenal 0.36.2 import/deploy/purge passes, exactly three payload files, no live profile change. New key behavior still needs user in-game confirmation; no game launched.
 
-scripts/build_input_native.py reproduces the existing embedded binary byte-for-byte. The preferred image base is recorded as 0x6ac00000 because MinGW auto-base depended on its original output directory; ASLR remains enabled. Initial recompile differed only because of that base. scripts/audit_native_helpers.py verifies hashes, imports and zero entry points, and writes the inspection manifest. No native core was replaced this turn.
+ZIP outputs/Vehicle-Specified-Seat-Switch-0.4.5.zip
+Bytes 233439
+SHA-256 65342c8d874718dc703edfdcc37c4a1311d7ec776f00b1e4212f7fa2405945c5
+Lua SHA-256 3446dbacec9835ed7ff64bd7f981506ab04c3797732684f02df51c4f3e85c0f9
 
-## Validation and artifact
+## Pending unrelated issues
 
-35 offline groups pass. New real Windows tests cover Unicode extraction/reuse, CNG SHA-256, restricted library loading, loaded-path verification, both helper ABIs outside the game, exact-size cache corruption, invalid payload/kind/path and absent-export refusal. Existing receiver/tank/seat/menu/monitor contracts remain tested with declared engine doubles. No game or live profile was changed or launched.
+Reported 0.4.3 Bastion-only failure: `Bastion overlay state count changed` in pose.lua:74, expected layer8 count332 from tank_spec.lua. Guard refuses before mutation; other vehicles work. Actual remote count/resource unavailable. Asked for user game version/mod list and minimal-dependency reproduction; no fix claimed or implemented. Upgrading 0.4.4/0.4.5 does not fix that guard.
 
-Isolated real Arsenal 0.36.2 import/deploy/purge passed; exactly three payload files, hashes preserved, Native/ and Source/ not installed to game bin. Artifact/source/validation/CRC/default/description/native-manifest checks pass.
-
-ZIP outputs/Vehicle-Specified-Seat-Switch-0.4.4.zip
-Bytes 691477
-SHA-256 f0e6dd0e1926e241e6754af458f45de27b8951772e654bfed9afbf7bdd4f2274
-Lua SHA-256 ddcf772036e46c8bbbb5cce403c53c1999d9c7506393b648e3163a5875246ee6
-
-Next useful check: exit/deploy/restart 0.4.4, perform one solo and one ordinary multiplayer switch if available, and inspect native_helper_verified entries in VehicleSeatSwitch.log for the new cache path. A multiplayer gathering is not required just for security validation; actual synchronous export-loader behavior in the game remains to confirm. Do not delete cached helpers while the game is running. Older cache files can be removed manually after exit when confirmed to be this addon's files.
-
-Earlier live/verification boundaries remain in history. Push reviewed source/tests/docs once at end; do not upload outputs/raw/local credentials or create Releases.
+Earlier exact live boundaries: performance-data filter and Unicode loader integration still lack explicit live confirmation; four-player-specific validation remains unreported. Keep these separate from offline evidence. Do not request extra multiplayer gatherings merely to check parsing. Native caches may leave temporary .tmp files if interrupted during creation; no automatic old-cache deletion. No DeepSeek/delegation.

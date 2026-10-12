@@ -35,11 +35,12 @@ function M.new(api,keys,input,policy,snapshot,native,probe,emit,gate)
   local physical={};for code in pairs(pressed)do physical[code]=true end
   local consumed,records,discarded={},{},{}
   local was_pending=probe.pending
-  if probe.pending or (now>=self.next_probe and s and s.player_count>=2 and s.player_count<=4) then
+  local enhanced=not policy.direct_allowed or policy.direct_allowed()
+  if probe.pending or (enhanced and now>=self.next_probe and s and s.player_count>=2 and s.player_count<=4) then
    self.next_probe=now+.1;probe:step(nil,now,focused and enabled)
   end
   if gate then
-   gate:pulse(s,probe.observed,keys,enabled and probe.phase~='stopped')
+   gate:pulse(s,enhanced and probe.observed or nil,keys,enabled and probe.phase~='stopped')
    consumed,records,discarded=gate:take(s);records=records or{};discarded=discarded or{}
    if gate.filter then gate:filter(pressed,consumed)end
    if gate.failed or gate.pending then enabled=false end

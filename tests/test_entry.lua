@@ -141,6 +141,7 @@ pressed[112]=nil;tick(3);assert(VehicleSeatSwitch.effective_mode=='normal'and Ve
 -- Normal restrictions hold in the resident multiplayer dispatcher too.
 count=3;tick(10);local old_mutations=solo_direct
 bindings[prefix..'seat2']=true;tick(1);bindings[prefix..'seat2']=nil;tick(30);assert(shared_snapshot.node==1)
+before=network_steps;tick(200);assert(network_steps==before,'Normal mode polled Enhanced owner/roster state while idle')
 before=network_steps;bindings[prefix..'seat5']=true;tick(1);bindings[prefix..'seat5']=nil;tick(30)
 assert(shared_snapshot.node==1 and solo_direct==old_mutations)
 mission=false;tick(5);local baseline=reads;tick(500)
@@ -167,7 +168,7 @@ assert(bundle:sub(-#source)==source)
 local bridge='\n';for _,name in ipairs(substitutions)do bridge=bridge..name..'=__fixture.'..name..'\n'end
 env.__fixture=env;enhanced=true;mission=false;count=1;options[prefix..'mode']=1
 restart(bundle:sub(1,#bundle-#source)..bridge..source);tick(610)
-assert(VehicleSeatSwitch.version=='0.4.5'and VehicleSeatSwitch.transport_ready,tostring(VehicleSeatSwitch.error))
+assert(VehicleSeatSwitch.version=='0.4.6'and VehicleSeatSwitch.transport_ready,tostring(VehicleSeatSwitch.error))
 assert(env.shutdown()=='shutdown_forwarded')
 print('PASS exact unified archive prefix with real menu/input modules and declared engine doubles')
 

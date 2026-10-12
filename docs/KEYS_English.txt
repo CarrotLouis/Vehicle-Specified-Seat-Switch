@@ -1,4 +1,4 @@
-Vehicle Specified Seat Switch 0.4.5 — Keys and combinations
+Vehicle Specified Seat Switch 0.4.6 — Keys and combinations
 
 CONFIGURATION
 %APPDATA%\Arrowhead\Helldivers2\VehicleSeatSwitch.ini
@@ -7,7 +7,7 @@ Created on first launch; existing settings are preserved. Both variants share it
 COMBINATIONS
 Combine any supported keyboard keys and mouse buttons. No modifier is required. Repeated keys or repeated modifier groups are invalid.
 Examples: CTRL+1, Q+E, MOUSE4+W, MOUSE4+MOUSE5, CTRL+MOUSE4+Q, MOUSE4+CTRL.
-Case is ignored; spaces around + are allowed. Preceding key order is flexible; the final key is the trigger.
+Case is ignored; spaces around + are allowed. Preceding key order is flexible; the final key is the trigger and can be an ordinary key, mouse button or modifier.
 Hold all preceding keys, then press the final key. Pressing both in the same frame also works. Holding a binding does not repeat.
 Pressing the primary key before adding a prerequisite does not trigger: release and press the primary key again.
 Modifiers match exactly: CTRL+1 does not match CTRL+SHIFT+1; plain 1 does not match CTRL+1. Default F1–F5 likewise do not trigger while extra modifiers are held.

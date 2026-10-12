@@ -37,3 +37,7 @@ native_library.lua extracts the embedded native payload into the addon's dedicat
 ## Free INI chords
 
 config.chords interns canonical ordinary-key prerequisite lists under numeric binding IDs. api.chords exposes them to input.lua and input_gate.lua; the final key remains the edge trigger, and legacy modifier matching stays exact. Parsing bounds at 255 tokens and rejects repeated keys/groups. Runtime polls only configured keys and modifiers. Native ABI3 validates each prerequisite at the actual input message; its own-window lifecycle, bounded intent ring and primary-only consumption remain. Prefixes are not consumed, and gameplay conflict/quiet checks are not relaxed. ModBindingsMenu uses its independent native action provider.
+
+## Runtime cost and resource variants
+
+Both resolvers yield by high-resolution elapsed time (2 ms), reads (32) or bytes (32 KiB) while retaining all interface evidence. Normal skips passive Enhanced owner captures; pending transactions keep cleanup. Pose metadata reads share the two seat layers within each check. Bastion overlay names resolve by identity under bounded storage rather than total count332; final indices and hashes are checked against fresh resource reads. Only Fall/Fall_Aim are cleared; added map/light states are preserved. Ordinary chord prerequisites gate fast snapshot refresh. See PERFORMANCE.md for exact schedules, Watchdog units and offline/live boundaries.

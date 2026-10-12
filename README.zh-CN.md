@@ -8,7 +8,7 @@ INI 支持已支持键名的自由组合，包括 `MOUSE4+W`、`Q+E`、`CTRL+MOU
 
 ## 安装与配置
 
-当前修订为 **0.4.5**，使用统一安装包。
+当前修订为 **0.4.6**，使用统一安装包。
 
 1. 退出游戏，启用 [Bingus Shared Loader](https://github.com/CowboyBingus/BingusSharedLoader) v18 或以上及必需的 [ModOptionsMenu](https://github.com/CowboyBingus/ModOptionsMenu)。
 2. 按需启用 [ModBindingsMenu](https://github.com/CowboyBingus/ModBindingsMenu)，每个菜单只安装一份。
@@ -68,7 +68,7 @@ python -X utf8 work/scripts/build_input_native.py
 python -X utf8 work/scripts/audit_native_helpers.py
 python -X utf8 work/scripts/validate.py
 python -X utf8 work/scripts/build.py --package
-node work/scripts/test_arsenal.cjs outputs/Vehicle-Specified-Seat-Switch-0.4.5.zip
+node work/scripts/test_arsenal.cjs outputs/Vehicle-Specified-Seat-Switch-0.4.6.zip
 python -X utf8 work/scripts/verify_artifact.py <Arsenal 检查打印的 result.json 路径>
 ```
 

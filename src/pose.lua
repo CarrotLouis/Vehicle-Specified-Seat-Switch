@@ -23,7 +23,7 @@ return function(api,profile)
   m104={'front_left','front_right','frv_gunner'},
   bastion={'tank_top','tank_gunner','tank_top','tank_top'},
   maelstrom={'tank_top','tank_gunner','tank_top','tank_top'}}
- local p={}
+ local p={};local overlay_cache
  local function read(address,n)
   local b=api.read(address,n);assert(b and #b==n,'Unreadable animation state');return b
  end
@@ -32,6 +32,36 @@ return function(api,profile)
   local a,c,d,e=b:byte(o+1,o+4);assert(e);return a+c*256+d*65536+e*16777216
  end
  local function offset(n)assert(n>=0 and n<0x2000000,'Animation offset exceeds bound');return n end
+ local function overlay(layer)
+  local head=read(layer,12);local count=u32(head,8)
+  assert(count>0 and count<=2048,'Bastion overlay state count outside bound')
+  local row=read(layer,12+count*4);assert(row:sub(1,12)==head,'Bastion overlay table changed')
+  local states=layout.bastion_fall.states
+  local function matches(indices)
+   for i,state in ipairs(states)do
+    local index=indices[i]
+    if index>=count or read(layer+offset(u32(row,12+index*4)),8)~=state.hash then return false end
+   end
+   return true
+  end
+  local indices={};for i,state in ipairs(states)do indices[i]=state.index end
+  if overlay_cache and overlay_cache.layer==layer and overlay_cache.count==count and matches(overlay_cache.indices)then
+   indices=overlay_cache.indices
+  elseif not matches(indices)then
+   -- Search only this bounded animation layer when the named states moved.
+   -- New unrelated states (e.g. map/light actions) are preserved.
+   indices={}
+   for index=0,count-1 do
+    local hash=read(layer+offset(u32(row,12+index*4)),8)
+    for i,state in ipairs(states)do if hash==state.hash then
+     assert(indices[i]==nil,'Ambiguous Bastion overlay state identity');indices[i]=index
+    end end
+   end
+   for i=1,#states do assert(indices[i]~=nil,'Bastion fall-state identity missing')end
+  end
+  overlay_cache={layer=layer,count=count,indices=indices}
+  return {empty=indices[1],fall=indices[2],aim=indices[3]}
+ end
  function p.check(s)
   assert(targets[s.vehicle],'No direct pose profile')
   local object=unit(s.avatar_unit);assert(object~=nil,'Avatar engine unit expired')
@@ -60,20 +90,19 @@ return function(api,profile)
   local group_table=read(groups,4+layout.layers*4)
   assert(u32(group_table,0)==layout.layers,'Invalid animation group table')
   -- Validate bounds and every target state name before the first gameplay change.
+  local rows={}
   for _,pair in pairs(layout.states) do for _,state in ipairs(pair) do
-   local layer=groups+offset(u32(group_table,4+state.layer*4))
-   local row=read(layer,12+state.count*4)
-   assert(u32(row,8)==state.count,'Avatar animation state count changed')
-   local address=layer+offset(u32(row,12+state.index*4))
+   local cached=rows[state.layer]
+   if not cached then
+    local layer=groups+offset(u32(group_table,4+state.layer*4))
+    cached={layer=layer,row=read(layer,12+state.count*4)};rows[state.layer]=cached
+   end
+   assert(u32(cached.row,8)==state.count,'Avatar animation state count changed')
+   local address=cached.layer+offset(u32(cached.row,12+state.index*4))
    assert(read(address,8)==state.hash,'Avatar animation state identity changed')
   end end
   if s.vehicle=='bastion' and layout.bastion_fall then
-   for _,state in ipairs(layout.bastion_fall.states)do
-    local layer=groups+offset(u32(group_table,4+state.layer*4))
-    local row=read(layer,12+state.count*4)
-    assert(u32(row,8)==state.count,'Bastion overlay state count changed')
-    assert(read(layer+offset(u32(row,12+state.index*4)),8)==state.hash,'Bastion fall-state identity changed')
-   end
+   s.bastion_overlay=overlay(groups+offset(u32(group_table,4+8*4)))
   end
   local q=layout.queue;local world=ptr(object+q.world_offset)
   local count=u32(read(world+q.count_offset,4),0)
@@ -91,21 +120,26 @@ return function(api,profile)
   assert(p.check(s))
   local values=ffi.new('int32_t[33]');get_states(values,s.avatar_unit)
   assert(values[32]==layout.layers,'Bastion overlay layer count changed')
-  return (values[8]==237 or values[8]==238)and
+  local named=s.bastion_overlay
+  return (values[8]==named.fall or values[8]==named.aim)and
    (values[0]==123 and values[13]==102 or values[0]==122 and values[13]==99)
  end
  function p.clear_fall(s)
-  if not p.fall_present(s)then return false end
+  if s.vehicle~='bastion' or not layout.bastion_fall or s.transition~=43 or
+     not s.profile or s.profile.roles[s.node+1]~=3 then return false end
   assert(p.check(s));local before=ffi.new('int32_t[33]');get_states(before,s.avatar_unit)
-  assert(before[32]==layout.layers and (before[8]==237 or before[8]==238),'Bastion overlay changed before reset')
+  assert(before[32]==layout.layers,'Bastion overlay layer count changed')
+  local named=s.bastion_overlay
+  if not((before[8]==named.fall or before[8]==named.aim)and
+    (before[0]==123 and before[13]==102 or before[0]==122 and before[13]==99))then return false end
   -- These two layers have other outgoing transitions for the chosen native
   -- event. Captured seated values have no such transition; require them.
   assert(before[7]==3 and before[17]==18,'Bastion overlay auxiliary pose changed')
   local values=ffi.new('int32_t[33]');for i=0,31 do values[i]=-1 end
-  values[8]=0;values[32]=9
+  values[8]=named.empty;values[32]=9
   set_states(s.avatar_unit,values)
   local after=ffi.new('int32_t[33]');get_states(after,s.avatar_unit)
-  assert(after[32]==layout.layers and after[8]==0,'Bastion overlay reset failed')
+  assert(after[32]==layout.layers and after[8]==named.empty,'Bastion overlay reset failed')
   for i=0,layout.layers-1 do if i~=8 then assert(before[i]==after[i],'Bastion overlay reset changed another layer')end end
   return true,tonumber(before[8])
  end

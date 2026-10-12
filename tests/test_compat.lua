@@ -89,3 +89,22 @@ local disp=ffi.new('int32_t[1]');ffi.copy(disp,assert(rawread(at,4)),4);disp[0]=
 patches={{a=at,b=ffi.string(disp,4)}}
 assert(not pcall(run,'enhanced'),'different generic manager root was accepted');patches={}
 print('PASS changed weapon-manager relationship refuses initialization despite identical masked initializer bytes')
+
+local ticks,reads,max_reads=0,0,0
+local real_read=api.read
+api.clock=function()return ticks end
+api.read=function(a,n)reads=reads+1;ticks=ticks+.0004;return real_read(a,n)end
+for _,factory in ipairs({compat,assert(loadfile('work/src/normal_compat.lua'))()})do
+ local mode=factory==compat and 'enhanced'or'normal'
+ local proof=factory==compat and spec or assert(loadfile('work/src/normal_compat_spec.lua'))()
+ local task=factory.start(api,bases['game.dll'],profile,proof,mode)
+ local result
+ for _=1,30000 do
+  reads=0;result=task.step();max_reads=math.max(max_reads,reads)
+  assert(reads<=6,'A resolver exceeded its 2 ms cooperative slice under slow reads')
+  if result then break end
+ end
+ assert(result and result.capabilities.normal)
+end
+print('PASS real interface results preserved with 2 ms/32-read/32KiB cooperative startup slices; synthetic slow-read max '..max_reads)
+api.read=real_read;api.clock=nil

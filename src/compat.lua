@@ -14,14 +14,17 @@ local function match(b,chunks)
 end
 M.match=match
 function M.start(api,game,baseline,spec,mode,trace)
- local used,scanned=0,0
+ local used,scanned,calls=0,0,0
+ local clock=api.clock or os.clock;local slice_begin=clock()
  local modules,resolved={},{}
  local output=copy(baseline);output.layout_schema=spec.schema
  output.capabilities={normal=false,enhanced=false};output.compatibility={strategy='interface_evidence_v1',relocated=0}
  local function log(s)if trace then trace('compat '..s)end end
  local function read(base,rva,n)
-  used=used+n
-  if used>262144 then used=0;coroutine.yield('checking_interfaces') end
+  if used+n>32768 or calls>=32 or clock()-slice_begin>=.002 then
+   used=0;calls=0;coroutine.yield('checking_interfaces');slice_begin=clock()
+  end
+  used=used+n;calls=calls+1
   return api.read(base+rva,n)
  end
  local function inside(m,rva,n,kind)
@@ -202,6 +205,7 @@ function M.start(api,game,baseline,spec,mode,trace)
  end
  local co=coroutine.create(run)
  return {step=function()
+  slice_begin=clock()
   local ok,value=coroutine.resume(co);if not ok then error(value)end
   if coroutine.status(co)=='dead' then return value end
   return nil,value

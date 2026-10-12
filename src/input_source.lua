@@ -44,7 +44,11 @@ function M.new(ini,api,input,policy,menus,ids)
  end
  function self:held()
   if self.strategy=='menu'then return next(self.pending)~=nil end
-  for code in pairs(self.bindings)do if api.down(code%256)then return true end end
+  for code in pairs(self.bindings)do if api.down(code%256)then
+   local match=true
+   for _,key in ipairs(api.chords and api.chords[code]or{})do if not api.down(key)then match=false;break end end
+   if match then return true end
+  end end
   return false
  end
  function self:flush()

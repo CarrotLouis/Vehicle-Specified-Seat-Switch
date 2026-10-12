@@ -3,9 +3,9 @@ from pathlib import Path
 import hashlib,json,struct,sys,zipfile
 from archive_format import resource_hash,ARCHIVE,TYPE
 R=Path(__file__).resolve().parents[1];B=R/'build';D=R/'docs'
-zpath=R.parent/'outputs/Vehicle-Specified-Seat-Switch-0.4.5.zip'
+zpath=R.parent/'outputs/Vehicle-Specified-Seat-Switch-0.4.6.zip'
 package=json.loads((B/'package.json').read_text())
-checks=json.loads((B/'tests-passed.json').read_text());assert len(checks['checks'])==37
+checks=json.loads((B/'tests-passed.json').read_text());assert len(checks['checks'])==38
 assembly=json.loads((B/'assembly.json').read_text())
 with zipfile.ZipFile(zpath)as z:
     assert z.testzip()is None

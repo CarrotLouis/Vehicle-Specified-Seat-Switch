@@ -23,3 +23,15 @@ assert(next(frame(true))==nil,'held INI key on source change fired')
 held[112]=nil;frame(true);held[112]=true;assert(frame(true)[112])
 assert(keys.m102.driver==112 and keys.m102.gunner==116,'source switch rewrote stored INI')
 print('PASS independent INI/native sources, pulse capture, Hold edge, unavailable/focus/source barriers, role-index mapping and simultaneous inputs')
+
+local free=assert(config.parse('[m102]\ndriver=MOUSE4+W\n'))
+api.chords=config.chords;local arbitrary=m('input_source').new(free,api,input,policy,menus,ids)
+held={[87]=true};assert(not arbitrary:held(),'Driving without the chord prefix forced seat snapshots')
+held[5]=true;assert(arbitrary:held());held[5]=nil;assert(not arbitrary:held())
+print('PASS incomplete free chords do not request fast snapshot refresh')
+
+local platform=assert(loadfile('work/src/platform.lua'))()(function()error('No disk hashing in clock test')end)
+local start=platform.clock();local last=start
+for _=1,1000 do local now=platform.clock();assert(now>=last);last=now end
+assert(last>start,'Runtime budget clock has no subframe resolution')
+print('PASS actual Windows QPC startup-budget clock; monotonic and read-only')

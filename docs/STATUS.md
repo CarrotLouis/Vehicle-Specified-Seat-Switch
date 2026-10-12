@@ -1,32 +1,16 @@
-# 0.4.5 checkpoint — 2026-10-10
+# 0.4.6 checkpoint — 2026-10-12
 
-## Request and scope
+User reports Bastion-only failure correlates with a helmet/map-light addon; exact addon uncertain (provided Nexus16320, local Helmet Headlamp1.3.0 found). Prior log's overlay count332 guard is real. User also reports Watchdog540ms in0.4.5, full report not yet available. Inspected supplied Watchdog0.18.0 actual source; its ms/s and worst-frame fields differ. Do not assert540ms cause or <=100ms live outcome without the report.
 
-User requested non-modifier chords such as MOUSE4+W/S/A/D/F. During implementation the user explicitly narrowed scope to recognition only: gameplay input conflicts are the user's responsibility. Do not add prefix suppression, gameplay quiet-check exemptions or special driver-key cleanup for these chords.
+Implemented: dynamic Bastion Empty/Fall/Fall_Aim identity checks with bounded <=2048 layer-only lookup when indices moved, last mapping cached with fresh hash checks. Added/unrelated light states stay intact, unknown/missing/ambiguous refuses. Shared seat-pose layer reads consolidated; duplicate clear_fall checks/getter removed. Startup Normal/Enhanced resolver slices2ms/QPC,32 reads or32KiB; no code-evidence removal. Normal mode no longer performs passive Enhanced owner/roster captures; pending cleanup preserved. Free-chord W-alone does not force rapid snapshots without its ordinary prefix. Occupancy/authority/membership/ACK/commit guards unchanged.
 
-src/config.lua now interns free chords in a descriptor table. The low 16 bits preserve legacy primary/modifier encoding, the upper 16 bits identify the canonical ordinary-key prerequisite set. All existing supported keyboard/mouse names can be ordinary prerequisites; final key is the down-edge trigger. Preceding order and aliases normalize; case/whitespace insensitive. No five-key limit (bounded 255 tokens, sufficient for the supported unique names). Repeated keys and duplicate modifier groups remain invalid; WIN is prefix-only, Fn/wheel/firmware-only inputs remain unsupported. Extra modifier groups do not match; unrelated ordinary keys are allowed. Exact duplicate bindings still restore vehicle defaults; free chords are not rejected merely for overlap, but simultaneous seat triggers are refused. Legacy modifier-only overlap checks remain.
+38 offline groups pass, plus direct real platform-clock check. New test_pose uses real baseline resource locally and authored synthetic overlay variations; actual own-process RPM benchmark42->29 calls/check,10940->2656 bytes/check, first mean0.0268->0.0119ms. Native engine animation calls remain effect doubles. New startup synthetic slow-read budgets and both real captured interface sets pass. Normal-idle and incomplete-chord checks pass. See docs/PERFORMANCE.md for full runtime explanation and test boundaries.
 
-api.chords connects parsed descriptors to the actual poller and native gate. Only configured keys plus existing modifier groups are polled. No process-memory scan, background capture or new file category is added. Configuration defaults remain F1-F5 and existing user INIs remain untouched. This extension is for INI only; ModBindingsMenu scope is unchanged.
+Both native DLLs unchanged from0.4.5 (transport7c533e1b..., input319aaaa1..., ABI4/3). Same verified Unicode dedicated cache and System32-only dependencies. No new native-cache filename, no additional files or continuous diagnostics. Formal ZIP omits Source/; Native inspection copies/security/hash manifests remain. Player intros describe current capabilities only; user manages Releases/changelog/Known Issues.
 
-## Native integration
+ZIP outputs/Vehicle-Specified-Seat-Switch-0.4.6.zip
+Bytes 234168
+SHA-256 6aa787d34ddde9bda401a82fc2e50fc9da21f117cc9af5754e698530374d8901
+Lua SHA-256 80ab3a18c4c2aa245cc44f438bd58691bc71f0d9178ca30587f812aad9964247
 
-Input helper ABI3 passes held_count + held[255] in each of at most five armed items. The native matcher validates ordinary prerequisites at message time, preserving 40-byte record IDs, source/generation/expiry checks and existing primary-key suppression. Prefix messages are forwarded untouched. Existing multiplayer release/quiet/occupancy/authority guards are unchanged; recognized chords can therefore wait for conflicting held gameplay controls to be released. Solo gameplay path and physics/seat transactions are unchanged.
-
-Input DLL: 11264 bytes, SHA-256 319aaaa11c5a7221da05c9779ffea1e6098a140cb8711caf05c6555bb0924cbd; imports Kernel32/MSVCRT/User32, entry point zero, unsigned. Exact rebuild verification passes. Transport unchanged: 16245 bytes, SHA-256 7c533e1b812b0be2cf58e418ac397d5025b3b71ebea8d41530a53a830534437f. Cache/loading guarantees from 0.4.4 remain. Updating creates one new input-helper cache filename; old files are not automatically deleted.
-
-## Packaging and evidence
-
-Per the preceding source-folder discussion, formal ZIP omits Source/. Public source, tests and build scripts remain on GitHub. Keep visible Native/, SECURITY.md, SHA256SUMS.txt and NATIVE_HELPERS.json with repository provenance. No changelog/history or validation caveats in player introductions. User manages Releases. Prior published ZIPs untouched; an undelivered 0.4.5 candidate was preserved under build/superseded before correcting its static-import disclosure.
-
-37 offline groups pass. Includes all five requested bindings, normalized aliases/order, final-modifier/long-chord matching, focus/hold/release protection, exact bundled entry wiring, native gate descriptors/lifecycle, and real compiled hidden-window plus separate GUI-thread tests. Native game/physics/network effects remain declared test doubles. New native helper cache loads/ABIs verified outside game. Isolated Arsenal 0.36.2 import/deploy/purge passes, exactly three payload files, no live profile change. New key behavior still needs user in-game confirmation; no game launched.
-
-ZIP outputs/Vehicle-Specified-Seat-Switch-0.4.5.zip
-Bytes 233439
-SHA-256 65342c8d874718dc703edfdcc37c4a1311d7ec776f00b1e4212f7fa2405945c5
-Lua SHA-256 3446dbacec9835ed7ff64bd7f981506ab04c3797732684f02df51c4f3e85c0f9
-
-## Pending unrelated issues
-
-Reported 0.4.3 Bastion-only failure: `Bastion overlay state count changed` in pose.lua:74, expected layer8 count332 from tank_spec.lua. Guard refuses before mutation; other vehicles work. Actual remote count/resource unavailable. Asked for user game version/mod list and minimal-dependency reproduction; no fix claimed or implemented. Upgrading 0.4.4/0.4.5 does not fix that guard.
-
-Earlier exact live boundaries: performance-data filter and Unicode loader integration still lack explicit live confirmation; four-player-specific validation remains unreported. Keep these separate from offline evidence. Do not request extra multiplayer gatherings merely to check parsing. Native caches may leave temporary .tmp files if interrupted during creation; no automatic old-cache deletion. No DeepSeek/delegation.
+Pending live: affected exact light+map resource variant with Bastion; Watchdog full report and real cost measurements; exact performance shortcut filter outcome; specific four-player core result. Local latest0.4.5 log confirms verified transport loading on2026-10-12, but contains no seat operations or input-helper activation. Do not treat that as full live0.4.6 proof. No game launched or live profile changed in this turn. Do not task DeepSeek. Prior published ZIPs preserved; source/tests/docs push authorized once at end.

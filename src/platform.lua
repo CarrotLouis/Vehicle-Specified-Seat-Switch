@@ -9,6 +9,8 @@ return function(hash_module)
  void *GetCurrentProcess(void);
  uint32_t GetCurrentProcessId(void);
  uint64_t GetTickCount64(void);
+ int VSSPerfCounter(int64_t *) __asm__("QueryPerformanceCounter");
+ int VSSPerfFrequency(int64_t *) __asm__("QueryPerformanceFrequency");
  int WriteProcessMemory(void *,void *,const void *,size_t,size_t *);
  int ReadProcessMemory(void *,const void *,void *,size_t,size_t *);
  void *GetForegroundWindow(void);
@@ -21,6 +23,10 @@ return function(hash_module)
  local process=k.GetCurrentProcess()
  local buffer,read=ffi.new('uint8_t[32768]'),ffi.new('size_t[1]')
  local a={hash_module=hash_module,ffi=ffi}
+ local counter,frequency=ffi.new('int64_t[1]'),ffi.new('int64_t[1]')
+ assert(k.VSSPerfFrequency(frequency)~=0 and frequency[0]>0,'Performance clock unavailable')
+ local seconds_per_tick=1/tonumber(frequency[0])
+ function a.clock()assert(k.VSSPerfCounter(counter)~=0);return tonumber(counter[0])*seconds_per_tick end
  function a.config_directory()
   local base=assert(os.getenv('APPDATA'),'APPDATA unavailable')
   assert(base~='','APPDATA is empty')
